@@ -14,10 +14,10 @@ RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && \
       apt-get install nodejs -y
 
 # Create temp directory for building viz app
-RUN mkdir -p /tmp/wbeep-viz-app
+RUN mkdir -p /tmp/delaware-basin-app
 
 # Copy source code
-WORKDIR /tmp/wbeep-viz-app
+WORKDIR /tmp/delaware-basin-app
 COPY . .
 # Set environment variables for build target and tile source and then run config.sh
 # to insert the correct S3 tile source URLs in the Mapbox configuration file.

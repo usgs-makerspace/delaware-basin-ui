@@ -23,18 +23,17 @@ export default {
                 type: 'vector',
                 // The following line is used as a reference point for automated builds
                 // to insert the correct HRU tile location - do not modify:
-                // HRU SOURCE INSERT
+                // DELAWARE BASIN SOURCE INSERT
 
                 // If you are setting up a local build, you can uncomment the following
                 // URL assignment to pull the HRU tiles from S3 so that no local tile
                 // server is required:
-                'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/test_tiles/{z}/{x}/{y}.pbf']
+                'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf']
                 //
                 // The following URL is an example of using a local mbtiles file and a
                 // tile server.  See the readme for more information:
                 // https://github.com/usgs-makerspace/wbeep-viz#start-run-the-tile-server
                 // url: 'http://localhost:8085/data/new2.json'
-
             }
         },
         'sprite': '',
