@@ -1,0 +1,62 @@
+pipeline {
+    agent {
+        node {
+            label 'project:any'
+        }
+    }
+
+    parameters {
+        choice(choices: ['test', 'qa', 'beta', 'prod'], description: 's3 bucket that the build will target', name: 'BUILD_DEST') 
+        choice(choices: ['default', 'test', 'prod'], description: 's3 bucket from which tiles are served', name: 'TILE_SOURCE')
+    }
+
+    stages {
+        stage('clean workspace'){
+         steps{
+            cleanWs()
+         }
+        }
+        stage('checkout'){
+            steps{
+                checkout scm
+                }
+        }
+        stage('build') {
+            steps {
+                
+                sh """
+                    docker build . --tag="wbeep-viz-docker" --build-arg BUILDTARGET=${params.BUILD_DEST} --build-arg TILESOURCE=${params.TILE_SOURCE}
+                    docker run wbeep-viz-docker
+                    pathtemplate=":tmp/wbeep-viz-app/dist"
+                    dockerinstanceid=\$( docker ps -l -q )
+                    docker cp  "\${dockerinstanceid}\${pathtemplate}" "$WORKSPACE"
+                    docker rm "\${dockerinstanceid}"            
+                """
+
+            }
+        }
+        
+        stage('send to S3') {
+            steps {
+                script {
+                    if ("${params.BUILD_DEST}" == "prod") {
+                        targetDomain = "s3://wbeep-prod-website"
+                    }
+                    else if ("${params.BUILD_DEST}" == "qa") {
+                        targetDomain = "s3://wbeep-qa-website"
+                    }
+                    else if ("${params.BUILD_DEST}" == "beta") {
+                        targetDomain = "s3://wbeep-beta-website"
+                    }
+                    else {
+                        targetDomain = "s3://wbeep-test-website"
+                    }
+                }
+                sh """
+                    aws s3 rm "${targetDomain}" --recursive --exclude "mbtiles/*" --exclude "tiles/*" --exclude "basetiles/*"
+                    aws s3 cp "$WORKSPACE/dist" "${targetDomain}" --recursive
+                """
+            }
+        }
+    }
+}
