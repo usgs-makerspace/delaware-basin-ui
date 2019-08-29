@@ -42,4 +42,6 @@ fi
 
 # Insert HRU and base tile URLs into Mapbox configuration file
 sed -i "/DELAWARE BASIN SOURCE INSERT/a $delawareBasinSource" "$mbconfig"
-sed -i "/BASE SOURCE INSERT/a $baseSource" "$mbconfig"
+# turning this off for now
+# will use the base tiles from WBEEP until they are finalized, this will save on transfer time
+#sed -i "/BASE SOURCE INSERT/a $baseSource" "$mbconfig"
