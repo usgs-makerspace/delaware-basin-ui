@@ -11,7 +11,7 @@ export default {
                 // If you are setting up a local build, you can uncomment the following
                 // URL assignment to pull the base tiles from S3 so that no local tile
                 // server is required:
-                //'tiles': ['https://d38anyyapxci3p.cloudfront.net/basetiles/{z}/{x}/{y}.pbf']
+                'tiles': ['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/basetiles/{z}/{x}/{y}.pbf']
                 //
                 // The following URL is an example of using a local mbtiles file and a
                 // tile server.  See the readme for more information:
@@ -19,7 +19,7 @@ export default {
                 // url: 'http://localhost:8086/data/basemap.json'
 
             },
-            HRU: {
+            delaware_basin_tiles: {
                 type: 'vector',
                 // The following line is used as a reference point for automated builds
                 // to insert the correct HRU tile location - do not modify:
@@ -28,7 +28,7 @@ export default {
                 // If you are setting up a local build, you can uncomment the following
                 // URL assignment to pull the HRU tiles from S3 so that no local tile
                 // server is required:
-                //'tiles': ['https://d38anyyapxci3p.cloudfront.net/tiles/{z}/{x}/{y}.pbf']
+                'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/test_tiles/{z}/{x}/{y}.pbf']
                 //
                 // The following URL is an example of using a local mbtiles file and a
                 // tile server.  See the readme for more information:
@@ -47,9 +47,9 @@ export default {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'background-color': 'rgba(233, 245, 245, 0.5)'
+                    'background-color': 'rgba(154, 215, 219, 0.5)'
                 },
-                'showButton': true
+                'showButton': false
             },
             {
                 'id': 'State Color Fill',
@@ -62,69 +62,87 @@ export default {
                 'paint': {
                     'fill-color': 'rgba(246, 246, 244, 1)',
                 },
-                'showButton': true
+                'showButton': false
             },
             {
-                'id': 'HRUS Fill Colors',
+                'id': 'Delaware Water Bodies',
                 'type': 'fill',
-                'source': 'HRU',
-                'source-layer': 'hrus',
+                'source': 'delaware_basin_tiles',
+                'source-layer': 'nhd_hires_waterbodies',
                 'layout': {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'fill-color': {
-                        'property': 'value',
-                        'type': 'categorical',
-                        'stops': [
-                            ['high','#A7B9D7'],
-                            ['medium','#FED98E'],
-                            ['low', '#EDAA5F'],
-                            ["",'#000000'],
-                        ]
-                    },
-                    'fill-opacity': ['case',
-                        ['boolean', ['feature-state', 'hover'], false],
-                        0.1,
-                        1
+                    'fill-color': 'blue'
+                },
+                'showButton': true
+            },
+            {
+                'id': 'Delaware Rivers',
+                'type': 'line',
+                'source': 'delaware_basin_tiles',
+                'source-layer': 'delaware_PRMS_streams',
+                'layout': {
+                    'visibility': 'visible'
+                },
+                'paint': {
+                    'line-color': 'red'
+                },
+                'showButton': true
+            },
+            {
+                'id': 'Delaware Monitoring Location Markers',
+                'type': 'circle',
+                'source': 'delaware_basin_tiles',
+                'source-layer': 'delaware_sites_summary',
+                'layout': {
+                    'visibility': 'visible'
+                },
+                'paint': {
+                    'circle-color': 'red',
+                    'circle-radius': 4
+                },
+                'showButton': true
+            },
+            {
+                'id': 'Delaware Flow Lines',
+                'type': 'line',
+                'source': 'delaware_basin_tiles',
+                'source-layer': 'nhd_hires_flowlines',
+                'layout': {
+                    'visibility': 'visible'
+                },
+                'paint': {
+                    'line-color': 'orange'
+                },
+                'showButton': true
+            },
+            {
+                'id': 'Delaware ML Names',
+                'type': 'symbol',
+                'source': 'delaware_basin_tiles',
+                'source-layer': 'delaware_sites_summary',
+                'layout': {
+                    'visibility': 'visible',
+                    'text-field': '{site_id}',
+                    'text-font': [
+                        'Roboto Regular'
+                    ],
+                    'text-size': 12,
+                    'symbol-placement': 'point',
+                    'text-line-height': 1.2,
+                    'text-justify': 'center',
+                    'text-anchor': 'bottom',
+                    'text-offset': [
+                        0,
+                        -0.5
                     ]
                 },
-                'showButton': true
-            },
-
-            {
-                'id': 'HRUS Outlines',
-                'type': 'line',
-                'source': 'HRU',
-                'source-layer': 'hrus',
-                'layout': {
-                    'visibility': 'visible'
-                },
                 'paint': {
-                    'line-color': {
-                        'property': 'value',
-                        'type': 'categorical',
-                        'stops': [
-                            ['high','#A7B9D7'],
-                            ['medium','#FED98E'],
-                            ['low', '#EDAA5F'],
-                            ["",'#000000'],
-                        ]
-                    },
-                    'line-width': 1
-                },
-                'showButton': true
-            },
-            {
-                'id': 'Neighboring Countries',
-                'type': 'fill',
-                'source': 'basemap',
-                'source-layer': 'neighboringcountry',
-                'layout': {
-                    'visibility': 'visible'
-                },
-                'paint': {
-                    'fill-color': 'rgba(237, 236, 232, 1)'
+                    'text-color': 'rgba(255,255,255, 1)',
+                    'text-halo-width': 1,
+                    'text-halo-blur': 1,
+                    'text-halo-color': 'rgba(0, 0, 0, 0.5)',
                 },
                 'showButton': true
             },

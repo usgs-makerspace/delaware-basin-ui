@@ -86,19 +86,20 @@
             return {
                 mapStyle: mapStyles.style,
                 container: 'map',
-                zoom: 3,
+                zoom: 6,
                 minZoom: 3,
-                maxZoom: 9,
-                center: [-95.7129, 37.0902],
+                maxZoom: 14,
+                center: [-75.072994, 40.544454],
                 pitch: 0, // tips the map from 0 to 60 degrees
                 bearing: 0, // starting rotation of the map from 0 to 360
                 hoveredHRUId: null,
-                legendTitle: 'Calculated Availability'
+                legendTitle: 'To Be Decided'
             }
         },
         methods: {
+            // Switch to a mobile menu (add the 'responsive' class name) when user clicks the 'layer-group' icon.
+            // Note: this method is bound to the anchor ('a') element that contains the 'layer-group' icon.
             changeToResponsiveElement: function() {
-                console.log('click worked');
                 let mapboxComponentLayerToggle = document.getElementById("mapbox_component-layer-toggle");
                 if (mapboxComponentLayerToggle.className === "mapbox_component-topnav") {
                     mapboxComponentLayerToggle.className += " responsive";
@@ -108,8 +109,6 @@
             },
             onMapLoaded(event) {
                 let map = event.map; // This gives us access to the map as an object but only after the map has loaded
-
-
 
                 // Next section gives us names for the layer toggle buttons
                 let styleLayers = Object.values(mapStyles.style.layers); // Pulls the layers out of the styles object as an array
