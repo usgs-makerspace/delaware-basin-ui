@@ -4,6 +4,10 @@ export default {
         sources: {
             basemap: {
                 type: 'vector',
+                // IMPORTANT: We are in the process of refining the base maps for use here and in the WBEEP project.
+                // Until the final base maps are completed, we will simply use the current versions in WBEEP.
+                // So, as seen below, the URL for the base tiles is hard coded.
+
                 // The following line is used as a reference point for automated builds
                 // to insert the correct base tile location - do not modify:
                 // BASE SOURCE INSERT
