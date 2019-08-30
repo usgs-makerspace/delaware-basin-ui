@@ -8,11 +8,10 @@ pipeline {
     parameters {
         choice(choices: ['test', 'prod'], description: 's3 bucket that the build will target', name: 'BUILD_DEST')
         choice(choices: ['default', 'test', 'prod'], description: 's3 bucket from which tiles are served', name: 'TILE_SOURCE')
-    }
         gitParameter(name: 'BRANCH_TAG',
                              type: 'PT_BRANCH_TAG',
                              defaultValue: 'master')
-
+    }
     stages {
         stage('clean workspace'){
          steps{
