@@ -24,34 +24,37 @@
         </a>
       </div>
     </div>
-    <MapLegend :legend-title="legendTitle" />
-    <MglMap
-      id="map"
-      :container="container"
-      :map-style="mapStyle"
-      :zoom="zoom"
-      :min-zoom="minZoom"
-      :max-zoom="maxZoom"
-      :center="center"
-      :pitch="pitch"
-      :bearing="bearing"
-      @load="onMapLoaded"
-    >
-      <MglScaleControl
-        position="bottom-right"
-        unit="imperial"
-      />
-      <MglNavigationControl
-        position="bottom-right"
-        :show-compass="false"
-      />
-      <MglGeolocateControl
-        position="bottom-right"
-      />
-      <MglFullscreenControl
-        position="bottom-right"
-      />
-    </MglMap>
+    <div id="mapContainer">
+      <MapLegend :legend-title="legendTitle" />
+      <MglMap
+        id="map"
+        :container="container"
+        :map-style="mapStyle"
+        :zoom="zoom"
+        :min-zoom="minZoom"
+        :max-zoom="maxZoom"
+        :center="center"
+        :pitch="pitch"
+        :bearing="bearing"
+        :access-token="accessToken"
+        @load="onMapLoaded"
+      >
+        <MglScaleControl
+          position="bottom-right"
+          unit="imperial"
+        />
+        <MglNavigationControl
+          position="top-left"
+          :show-compass="false"
+        />
+        <MglGeolocateControl
+          position="top-right"
+        />
+        <MglFullscreenControl
+          position="top-right"
+        />
+      </MglMap>
+    </div>
   </div>
 </template>
 
@@ -177,7 +180,7 @@
   @import"~mapbox-gl/dist/mapbox-gl.css";
 
   .header-container {
-    background-color: white;
+    background-color: #fff;
   }
   /* Add a background color to the layer toggle bar */
   .mapbox_component-topnav {
@@ -192,12 +195,25 @@
     color: #fff;
   }
 
-  #map {
-    position: absolute;
-    z-index: -1;
-    top: 100px;
-    bottom: 0;
-    width: 100%;
+  #mapContainer{
+    position: relative;
+    height:80vh;
+  }
+  @media screen and (min-width:600px) {
+    #viz_container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    #mapContainer {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: auto;
+    }
+    #map {
+      flex: 1;
+    }
   }
 
   /* override USWDS style to prevent title from wrapping too soon */
@@ -250,7 +266,8 @@
     display: none;
   }
 
-  /* When the screen is less than 600 pixels wide, hide all links, except for the title ("map layers"). Show the layer-group that should open and close the layer toggle bar */
+  /* When the screen is less than 600 pixels wide, hide all links, except for the title ("map layers").
+     Show the layer-group icon that should open and close the layer toggle bar */
   @media screen and (max-width: 600px) {
     .mapbox_component-topnav a:not(:first-child) {display: none;}
     .mapbox_component-topnav a.icon {
@@ -259,7 +276,8 @@
     }
   }
 
-  /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the layer group icon. This class makes the to layer toggle menu look good on small screens (display the links vertically instead of horizontally) */
+  /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the layer group icon.
+      This class makes the to layer toggle menu look good on small screens (display the links vertically instead of horizontally) */
   @media screen and (max-width: 600px) {
     .mapbox_component-topnav.responsive {position: relative;}
     .mapbox_component-topnav.responsive a.icon {

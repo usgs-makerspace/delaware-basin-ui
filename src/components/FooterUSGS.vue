@@ -124,9 +124,4 @@
 
 <style scoped lang="scss">
   @import"../style/usgsHeaderFooter/combinedLoad.css";
-  footer {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-  }
 </style>
