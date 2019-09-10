@@ -36,9 +36,13 @@
         :center="center"
         :pitch="pitch"
         :bearing="bearing"
-        :access-token="accessToken"
         @load="onMapLoaded"
       >
+        <MglAttributionControl
+          position="bottom-right"
+          :compact="false"
+          custom-attribution="© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+        />
         <MglScaleControl
           position="bottom-right"
           unit="imperial"
@@ -46,9 +50,6 @@
         <MglNavigationControl
           position="top-left"
           :show-compass="false"
-        />
-        <MglGeolocateControl
-          position="top-right"
         />
         <MglFullscreenControl
           position="top-right"
@@ -63,9 +64,9 @@
     import {
         MglMap,
         MglNavigationControl,
-        MglGeolocateControl,
         MglFullscreenControl,
-        MglScaleControl
+        MglScaleControl,
+        MglAttributionControl
     } from "vue-mapbox";
     import mapStyles from '../assets/mapStyles/mapStyles';
 
@@ -74,9 +75,9 @@
         components: {
             MglMap,
             MglNavigationControl,
-            MglGeolocateControl,
             MglFullscreenControl,
             MglScaleControl,
+            MglAttributionControl,
             MapLegend
         },
         props: {

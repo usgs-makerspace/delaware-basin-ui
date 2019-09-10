@@ -43,7 +43,7 @@ export default {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'background-color': 'rgba(154, 215, 219, 0.5)'
+                    'background-color': 'white'
                 },
                 'showButton': false
             },
