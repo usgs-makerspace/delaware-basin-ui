@@ -79,7 +79,7 @@
     border-style: groove;
     position: absolute;
     z-index:1000;
-    bottom: 190px;
+    bottom: 15px;
     left: 10px;
     background: rgba(255, 255, 255, 0.8);
     margin-right: 120px;
