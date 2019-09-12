@@ -33,7 +33,7 @@ export default {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'background-color': 'white'
+                    'background-color': 'rgba(156, 138, 82, .1)'
                 },
                 'showButton': false,
                 'inLegend' : false
