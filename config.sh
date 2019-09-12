@@ -17,8 +17,6 @@
 mbconfig=src/assets/mapStyles/mapStyles.js
 
 # S3 bucket addresses where tiles are stored
-# note: once we have a public URL for prod we'll need
-# to change that here
 prodBucket=delaware-basin-prod-website.s3-website-us-west-2.amazonaws.com
 testBucket=delaware-basin-test-website.s3-website-us-west-2.amazonaws.com
 

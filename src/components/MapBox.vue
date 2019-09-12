@@ -24,34 +24,38 @@
         </a>
       </div>
     </div>
-    <MapLegend :legend-title="legendTitle" />
-    <MglMap
-      id="map"
-      :container="container"
-      :map-style="mapStyle"
-      :zoom="zoom"
-      :min-zoom="minZoom"
-      :max-zoom="maxZoom"
-      :center="center"
-      :pitch="pitch"
-      :bearing="bearing"
-      @load="onMapLoaded"
-    >
-      <MglScaleControl
-        position="bottom-right"
-        unit="imperial"
-      />
-      <MglNavigationControl
-        position="bottom-right"
-        :show-compass="false"
-      />
-      <MglGeolocateControl
-        position="bottom-right"
-      />
-      <MglFullscreenControl
-        position="bottom-right"
-      />
-    </MglMap>
+    <div id="mapContainer">
+      <MapLegend :legend-title="legendTitle" />
+      <MglMap
+        id="map"
+        :container="container"
+        :map-style="mapStyle"
+        :zoom="zoom"
+        :min-zoom="minZoom"
+        :max-zoom="maxZoom"
+        :center="center"
+        :pitch="pitch"
+        :bearing="bearing"
+        @load="onMapLoaded"
+      >
+        <MglAttributionControl
+          position="bottom-right"
+          :compact="false"
+          custom-attribution="© <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+        />
+        <MglScaleControl
+          position="bottom-right"
+          unit="imperial"
+        />
+        <MglNavigationControl
+          position="top-left"
+          :show-compass="false"
+        />
+        <MglFullscreenControl
+          position="top-right"
+        />
+      </MglMap>
+    </div>
   </div>
 </template>
 
@@ -60,9 +64,9 @@
     import {
         MglMap,
         MglNavigationControl,
-        MglGeolocateControl,
         MglFullscreenControl,
-        MglScaleControl
+        MglScaleControl,
+        MglAttributionControl
     } from "vue-mapbox";
     import mapStyles from '../assets/mapStyles/mapStyles';
 
@@ -71,9 +75,9 @@
         components: {
             MglMap,
             MglNavigationControl,
-            MglGeolocateControl,
             MglFullscreenControl,
             MglScaleControl,
+            MglAttributionControl,
             MapLegend
         },
         props: {
@@ -93,7 +97,7 @@
                 pitch: 0, // tips the map from 0 to 60 degrees
                 bearing: 0, // starting rotation of the map from 0 to 360
                 hoveredHRUId: null,
-                legendTitle: 'To Be Decided'
+                legendTitle: 'Legend'
             }
         },
         methods: {
@@ -113,10 +117,17 @@
                 // Next section gives us names for the layer toggle buttons
                 let styleLayers = Object.values(mapStyles.style.layers); // Pulls the layers out of the styles object as an array
                 let toggleableLayerIds = [];
+                let layersTurnedOffAtStart = [];
 
                 for (let index = 0; index < styleLayers.length; index++) {
                     if (styleLayers[index].showButton === true) { // note: to NOT show a layer, change the 'showButton' property in the mapStyles.js to false
                         toggleableLayerIds.push(styleLayers[index].id)
+
+                        // Make a list if ids of any layers that we do not want to show when the page loads (layers that are toggleable but are off by default)
+                        // These layers that are off by default have a visibility of 'none' in the style sheet.
+                        if (styleLayers[index].layout.visibility === 'none') {
+                            layersTurnedOffAtStart.push(styleLayers[index].id);
+                        }
                     }
                 }
 
@@ -126,7 +137,14 @@
 
                     let link = document.createElement('a');
                     link.href = '#';
-                    link.className = 'active';
+                    // If the layer is not set to visible when first loaded, then do not mark it as active.
+                    // In other words, if the layer is not visible on page load, make the button look like the layer is toggled off
+                    if (layersTurnedOffAtStart.includes(id)) {
+                        link.className = '';
+                    } else {
+                        link.className = 'active';
+                    }
+
                     link.textContent = id;
 
                     // Creates a click event for each button so that when clicked by the user, the visibility property
@@ -177,7 +195,7 @@
   @import"~mapbox-gl/dist/mapbox-gl.css";
 
   .header-container {
-    background-color: white;
+    background-color: #fff;
   }
   /* Add a background color to the layer toggle bar */
   .mapbox_component-topnav {
@@ -192,12 +210,25 @@
     color: #fff;
   }
 
-  #map {
-    position: absolute;
-    z-index: -1;
-    top: 100px;
-    bottom: 0;
-    width: 100%;
+  #mapContainer{
+    position: relative;
+    height:80vh;
+  }
+  @media screen and (min-width:600px) {
+    #viz_container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    #mapContainer {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: auto;
+    }
+    #map {
+      flex: 1;
+    }
   }
 
   /* override USWDS style to prevent title from wrapping too soon */
@@ -250,7 +281,8 @@
     display: none;
   }
 
-  /* When the screen is less than 600 pixels wide, hide all links, except for the title ("map layers"). Show the layer-group that should open and close the layer toggle bar */
+  /* When the screen is less than 600 pixels wide, hide all links, except for the title ("map layers").
+     Show the layer-group icon that should open and close the layer toggle bar */
   @media screen and (max-width: 600px) {
     .mapbox_component-topnav a:not(:first-child) {display: none;}
     .mapbox_component-topnav a.icon {
@@ -259,7 +291,8 @@
     }
   }
 
-  /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the layer group icon. This class makes the to layer toggle menu look good on small screens (display the links vertically instead of horizontally) */
+  /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the layer group icon.
+      This class makes the to layer toggle menu look good on small screens (display the links vertically instead of horizontally) */
   @media screen and (max-width: 600px) {
     .mapbox_component-topnav.responsive {position: relative;}
     .mapbox_component-topnav.responsive a.icon {
