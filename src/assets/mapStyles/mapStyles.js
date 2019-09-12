@@ -1088,7 +1088,7 @@ export default {
                 'filter': ['all', ['==', '$type', 'Point'],
                     ['==', 'class', 'city']
                 ],
-                'id': 'city - names',
+                'id': 'city names',
                 'layout': {
                     'text-field': '{name:latin}\n{name:nonlatin}',
                     'text-font': ['Noto Sans Regular'],
