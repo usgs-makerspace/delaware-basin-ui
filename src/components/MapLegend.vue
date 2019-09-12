@@ -30,23 +30,19 @@
         createLegend() {
             // get the style layers from the map styles object
             let styleLayers = mapStyles.style.layers;
-            let colors = [];
+            let legendColors = [];
             let layers = [];
-            // look through the styles layers to find the one with the Hydrological Response Unit fill colors
+
+            // look through the styles layers grab all that are marked as 'inLegend': 'true'
             for (let index = 0; index < styleLayers.length; index++) {
-                if (styleLayers[index].id === 'HRUS Fill Colors') {
-                    // Get the fill color values and names then put them in separate lists
-                    let hruColors = styleLayers[index].paint['fill-color'].stops;
-                    let hruColorLabel = null;
-                    for (let index = 0; index < hruColors.length; index ++) {
-                        // Make a label for the blank and missing data
-                        if (hruColors[index][0] === '') {
-                            hruColorLabel = 'no data';
-                        } else {
-                            hruColorLabel = hruColors[index][0];
-                        }
-                        colors.push(hruColors[index][1]);
-                        layers.push(hruColorLabel);
+                if (styleLayers[index].inLegend === true) {
+                    if (styleLayers[index].paint['line-color']) {
+                        legendColors.push(styleLayers[index].paint['line-color']);
+                        layers.push(styleLayers[index].id);
+                    }
+                    if (styleLayers[index].paint['fill-color']) {
+                        legendColors.push(styleLayers[index].paint['fill-color']);
+                        layers.push(styleLayers[index].id);
                     }
                 }
             }
@@ -56,7 +52,7 @@
 
             for (let index = 0; index < layers.length; index++) {
                 let layer = layers[index];
-                let color = colors[index];
+                let color = legendColors[index];
                 let item = document.createElement('div');
                 let key = document.createElement('span');
 

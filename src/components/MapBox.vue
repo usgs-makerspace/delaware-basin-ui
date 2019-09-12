@@ -97,7 +97,7 @@
                 pitch: 0, // tips the map from 0 to 60 degrees
                 bearing: 0, // starting rotation of the map from 0 to 360
                 hoveredHRUId: null,
-                legendTitle: 'To Be Decided'
+                legendTitle: 'Legend'
             }
         },
         methods: {
@@ -117,10 +117,17 @@
                 // Next section gives us names for the layer toggle buttons
                 let styleLayers = Object.values(mapStyles.style.layers); // Pulls the layers out of the styles object as an array
                 let toggleableLayerIds = [];
+                let layersTurnedOffAtStart = [];
 
                 for (let index = 0; index < styleLayers.length; index++) {
                     if (styleLayers[index].showButton === true) { // note: to NOT show a layer, change the 'showButton' property in the mapStyles.js to false
                         toggleableLayerIds.push(styleLayers[index].id)
+
+                        // Make a list if ids of any layers that we do not want to show when the page loads (layers that are toggleable but are off by default)
+                        // These layers that are off by default have a visibility of 'none' in the style sheet.
+                        if (styleLayers[index].layout.visibility === 'none') {
+                            layersTurnedOffAtStart.push(styleLayers[index].id);
+                        }
                     }
                 }
 
@@ -130,7 +137,14 @@
 
                     let link = document.createElement('a');
                     link.href = '#';
-                    link.className = 'active';
+                    // If the layer is not set to visible when first loaded, then do not mark it as active.
+                    // In other words, if the layer is not visible on page load, make the button look like the layer is toggled off
+                    if (layersTurnedOffAtStart.includes(id)) {
+                        link.className = '';
+                    } else {
+                        link.className = 'active';
+                    }
+
                     link.textContent = id;
 
                     // Creates a click event for each button so that when clicked by the user, the visibility property
