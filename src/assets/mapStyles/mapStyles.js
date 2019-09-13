@@ -33,7 +33,8 @@ export default {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'background-color': 'rgba(156, 138, 82, .1)'
+                    'background-color': 'rgb(156, 138, 82)',
+                    'background-opacity': .1
                 },
                 'showButton': false,
                 'inLegend' : false
@@ -1069,7 +1070,26 @@ export default {
                 'inLegend' : false
             },
             {
-                'id': 'hydrological response unit',
+                'id': 'hydrological unit - highlight',
+                'type': 'fill',
+                'source': 'HRU',
+                'source-layer': 'hrus',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'fill-color': 'rgb(189, 209, 240)',
+                    'fill-opacity': ['case',
+                        ['boolean', ['feature-state', 'hover'], false],
+                        0.5,
+                        0
+                    ]
+                },
+                'showButton': true,
+                'inLegend' : false
+            },
+            {
+                'id': 'hydrological unit - outlines',
                 'type': 'line',
                 'source': 'HRU',
                 'source-layer': 'hrus',
@@ -1083,7 +1103,6 @@ export default {
                 'showButton': true,
                 'inLegend' : true
             },
-
             {
                 'filter': ['all', ['==', '$type', 'Point'],
                     ['==', 'class', 'city']
