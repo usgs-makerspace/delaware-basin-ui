@@ -991,7 +991,7 @@ export default {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'fill-color': 'blue'
+                    'fill-color': 'hsl(205, 92%, 49%)'
                 },
                 'showButton': true,
                 'inLegend' : true
@@ -1019,8 +1019,10 @@ export default {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'circle-color': 'black',
-                    'circle-radius': 3
+                    'circle-color': '#11b4da',
+                    'circle-radius': 4,
+                    'circle-stroke-width': 1,
+                    'circle-stroke-color': '#fff'
                 },
                 'showButton': true,
                 'inLegend' : true
