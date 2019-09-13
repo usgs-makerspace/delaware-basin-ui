@@ -2,7 +2,6 @@ export default {
     style: {
         version: 8,
         sources: {
-
             delaware_basin_tiles: {
                 type: 'vector',
                 // The following line is used as a reference point for automated builds
@@ -14,15 +13,16 @@ export default {
                 // server is required:
                 'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf']
             },
+            monitoring_location_summary: {
+                type: 'geojson',
+                data: 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson'
+            },
             HRU: {
                 type: 'vector',
                 'tiles': ['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf']
             },
             openmaptiles: {
                 type: 'vector',
-                cluster: true,
-                clusterMaxZoom: 14, // Max zoom to cluster points on
-                clusterRadius: 50, // Radius of each cluster when clustering points (defaults to 50)
                 'tiles': ['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/openmaptiles/{z}/{x}/{y}.pbf']
             },
         },
@@ -1013,81 +1013,77 @@ export default {
                 'showButton': true,
                 'inLegend' : true
             },
-            // {
-            //     'id': 'monitoring location - delaware',
-            //     'type': 'circle',
-            //     'source': 'delaware_basin_tiles',
-            //     'source-layer': 'delaware_sites_summary',
-            //     'layout': {
-            //         'visibility': 'visible'
-            //     },
-            //     'paint': {
-            //         'circle-color': '#fff',
-            //         'circle-radius': 4,
-            //         'circle-stroke-width': 1,
-            //         'circle-stroke-color': '#11b4da'
-            //     },
-            //     'showButton': true,
-            //     'inLegend' : true
-            // },
-
             {
-                'id': 'clusters',
+                'id': 'monitoring location - delaware',
                 'type': 'circle',
-                'source': 'delaware_basin_tiles',
-                'source-layer': 'delaware_sites_summary',
-                'filter': ['has', 'point_count'],
-                'paint': {
-                // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
-                // with three steps to implement three types of circles:
-                //   * Blue, 20px circles when point count is less than 100
-                //   * Yellow, 30px circles when point count is between 100 and 750
-                //   * Pink, 40px circles when point count is greater than or equal to 750
-                'circle-color': [
-                    'step',
-                    ['get', 'point_count'],
-                    '#51bbd6',
-                    100,
-                    '#f1f075',
-                    750,
-                    '#f28cb1'
-                    ],
-                'circle-radius': [
-                'step',
-                    ['get', 'point_count'],
-                    20,
-                    100,
-                    30,
-                    750,
-                    40
-                    ]
-                }
-            },
-            {
-                'id': 'cluster-count',
-                'type': 'symbol',
-                'source': 'delaware_basin_tiles',
-                'source-layer': 'delaware_sites_summary',
-                'filter': ['has', 'point_count'],
+                'source': 'monitoring_location_summary',
                 'layout': {
-                    'text-field': '{point_count_abbreviated}',
-                    'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
-                    'text-size': 12
-                }
-            },  
-            {
-                'id': 'unclustered-point',
-                'type': 'circle',
-                'source': 'delaware_basin_tiles',
-                'source-layer': 'delaware_sites_summary',
-                'filter': ['!', ['has', 'point_count']],
+                    'visibility': 'visible'
+                },
                 'paint': {
-                    'circle-color': '#11b4da',
+                    'circle-color': '#fff',
                     'circle-radius': 4,
                     'circle-stroke-width': 1,
-                    'circle-stroke-color': '#fff'
-                }
+                    'circle-stroke-color': '#11b4da'
+                },
+                'showButton': true,
+                'inLegend' : true
             },
+
+            // {
+            //     'id': 'clusters',
+            //     'type': 'circle',
+            //     'source': 'monitoring_location_summary',
+            //     'filter': ['has', 'point_count'],
+            //     'paint': {
+            //     // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+            //     // with three steps to implement three types of circles:
+            //     //   * Blue, 20px circles when point count is less than 100
+            //     //   * Yellow, 30px circles when point count is between 100 and 750
+            //     //   * Pink, 40px circles when point count is greater than or equal to 750
+            //     'circle-color': [
+            //         'step',
+            //         ['get', 'point_count'],
+            //         '#51bbd6',
+            //         100,
+            //         '#f1f075',
+            //         750,
+            //         '#f28cb1'
+            //         ],
+            //     'circle-radius': [
+            //     'step',
+            //         ['get', 'point_count'],
+            //         20,
+            //         100,
+            //         30,
+            //         750,
+            //         40
+            //         ]
+            //     }
+            // },
+            // {
+            //     'id': 'cluster-count',
+            //     'type': 'symbol',
+            //     'source': 'monitoring_location_summary',
+            //     'filter': ['has', 'point_count'],
+            //     'layout': {
+            //         'text-field': '{point_count_abbreviated}',
+            //         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
+            //         'text-size': 12
+            //     }
+            // },
+            // {
+            //     'id': 'unclustered-point',
+            //     'type': 'circle',
+            //     'source': 'monitoring_location_summary',
+            //     'filter': ['!', ['has', 'point_count']],
+            //     'paint': {
+            //         'circle-color': '#11b4da',
+            //         'circle-radius': 4,
+            //         'circle-stroke-width': 1,
+            //         'circle-stroke-color': '#fff'
+            //     }
+            // },
             {
                 'id': 'flow lines - delaware',
                 'type': 'line',
@@ -1105,8 +1101,7 @@ export default {
             {
                 'id': 'site names - delaware',
                 'type': 'symbol',
-                'source': 'delaware_basin_tiles',
-                'source-layer': 'delaware_sites_summary',
+                'source': 'monitoring_location_summary',
                 'layout': {
                     'visibility': 'none',
                     'text-field': '{site_id}',

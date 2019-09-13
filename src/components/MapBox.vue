@@ -54,13 +54,6 @@
         <MglFullscreenControl
           position="top-right"
         />
-        <MglMarker :coordinates="coordinates">
-          <MglPopup>
-
-              <div>Hello, I'm popup!</div>
-
-          </MglPopup>
-        </MglMarker>
       </MglMap>
     </div>
   </div>
@@ -73,9 +66,7 @@
         MglNavigationControl,
         MglFullscreenControl,
         MglScaleControl,
-        MglAttributionControl,
-        MglMarker,
-        MglPopup
+        MglAttributionControl
     } from "vue-mapbox";
     import mapStyles from '../assets/mapStyles/mapStyles';
 
@@ -87,8 +78,6 @@
             MglFullscreenControl,
             MglScaleControl,
             MglAttributionControl,
-            MglMarker,
-            MglPopup,
             MapLegend
         },
         props: {
@@ -108,8 +97,7 @@
                 pitch: 0, // tips the map from 0 to 60 degrees
                 bearing: 0, // starting rotation of the map from 0 to 360
                 hoveredHRUId: null,
-                legendTitle: 'Legend',
-                coordinates: [-75.389156, 41.43920]
+                legendTitle: 'Legend'
             }
         },
         methods: {
