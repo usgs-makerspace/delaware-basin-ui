@@ -54,6 +54,13 @@
         <MglFullscreenControl
           position="top-right"
         />
+        <MglMarker :coordinates="coordinates">
+          <MglPopup>
+
+              <div>Hello, I'm popup!</div>
+
+          </MglPopup>
+        </MglMarker>
       </MglMap>
     </div>
   </div>
@@ -66,7 +73,9 @@
         MglNavigationControl,
         MglFullscreenControl,
         MglScaleControl,
-        MglAttributionControl
+        MglAttributionControl,
+        MglMarker,
+        MglPopup
     } from "vue-mapbox";
     import mapStyles from '../assets/mapStyles/mapStyles';
 
@@ -78,6 +87,8 @@
             MglFullscreenControl,
             MglScaleControl,
             MglAttributionControl,
+            MglMarker,
+            MglPopup,
             MapLegend
         },
         props: {
@@ -97,7 +108,8 @@
                 pitch: 0, // tips the map from 0 to 60 degrees
                 bearing: 0, // starting rotation of the map from 0 to 360
                 hoveredHRUId: null,
-                legendTitle: 'Legend'
+                legendTitle: 'Legend',
+                coordinates: [-75.389156, 41.43920]
             }
         },
         methods: {
@@ -186,6 +198,32 @@
                         map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, { hover: false});
                     }
                     hoveredHRUId =  null;
+                });
+
+
+                // next section controls clustering of monitoring locations
+                // inspect a cluster on click
+                map.on('click', 'clusters', function (e) {
+                    let features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+                    let clusterId = features[0].properties.cluster_id;
+                    map.getSource('delaware_basin_tiles').getClusterExpansionZoom(clusterId, function (err, zoom) {
+                        if (err)
+                            return;
+
+                        map.easeTo({
+                            center: features[0].geometry.coordinates,
+                            zoom: zoom
+                        });
+                    });
+                });
+
+                map.on('mouseenter', 'clusters', function () {
+  console.log('mouse enter ran')
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                map.on('mouseleave', 'clusters', function () {
+  console.log('mouse leave ran')
+                    map.getCanvas().style.cursor = '';
                 });
             }
         }
