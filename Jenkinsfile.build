@@ -56,7 +56,7 @@ pipeline {
                     }
                 }
                 sh """
-                    aws s3 rm "${targetDomain}" --recursive --exclude "tiles/*" --exclude "basetiles/*"
+                    aws s3 rm "${targetDomain}" --recursive --exclude "tiles/*" --exclude "basetiles/* --exclude "geojson/*"
                     aws s3 cp "$WORKSPACE/dist" "${targetDomain}" --recursive
                 """
             }

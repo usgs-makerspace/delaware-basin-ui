@@ -2,7 +2,6 @@ export default {
     style: {
         version: 8,
         sources: {
-
             delaware_basin_tiles: {
                 type: 'vector',
                 // The following line is used as a reference point for automated builds
@@ -13,6 +12,13 @@ export default {
                 // URL assignment to pull the HRU tiles from S3 so that no local tile
                 // server is required:
                 'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf']
+            },
+            monitoring_location_summary: {
+                type: 'geojson',
+                data: 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson',
+                cluster: true,
+                clusterMaxZoom: 10,
+                clusterRadius: 50
             },
             HRU: {
                 type: 'vector',
@@ -991,36 +997,7 @@ export default {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'fill-color': 'blue'
-                },
-                'showButton': true,
-                'inLegend' : true
-            },
-            {
-                'id': 'rivers - delaware',
-                'type': 'line',
-                'source': 'delaware_basin_tiles',
-                'source-layer': 'delaware_PRMS_streams',
-                'layout': {
-                    'visibility': 'visible'
-                },
-                'paint': {
-                    'line-color': 'red'
-                },
-                'showButton': true,
-                'inLegend' : true
-            },
-            {
-                'id': 'monitoring location - delaware',
-                'type': 'circle',
-                'source': 'delaware_basin_tiles',
-                'source-layer': 'delaware_sites_summary',
-                'layout': {
-                    'visibility': 'visible'
-                },
-                'paint': {
-                    'circle-color': 'black',
-                    'circle-radius': 3
+                    'fill-color': 'hsl(205, 92%, 49%)'
                 },
                 'showButton': true,
                 'inLegend' : true
@@ -1040,34 +1017,18 @@ export default {
                 'inLegend' : true
             },
             {
-                'id': 'site names - delaware',
-                'type': 'symbol',
+                'id': 'rivers - delaware',
+                'type': 'line',
                 'source': 'delaware_basin_tiles',
-                'source-layer': 'delaware_sites_summary',
+                'source-layer': 'delaware_PRMS_streams',
                 'layout': {
-                    'visibility': 'none',
-                    'text-field': '{site_id}',
-                    'text-font': [
-                        'Roboto Regular'
-                    ],
-                    'text-size': 12,
-                    'symbol-placement': 'point',
-                    'text-line-height': 1.2,
-                    'text-justify': 'center',
-                    'text-anchor': 'bottom',
-                    'text-offset': [
-                        0,
-                        -0.5
-                    ]
+                    'visibility': 'visible'
                 },
                 'paint': {
-                    'text-color': 'rgba(255,255,255, 1)',
-                    'text-halo-width': 1,
-                    'text-halo-blur': 1,
-                    'text-halo-color': 'rgba(0, 0, 0, 0.5)',
+                    'line-color': 'red'
                 },
                 'showButton': true,
-                'inLegend' : false
+                'inLegend' : true
             },
             {
                 'id': 'hydrological unit - highlight',
@@ -1102,6 +1063,102 @@ export default {
                 },
                 'showButton': true,
                 'inLegend' : true
+            },
+            {
+                'id': 'clusters',
+                'type': 'circle',
+                'source': 'monitoring_location_summary',
+                'layout': {
+                    'visibility': 'visible'
+                },
+                'filter': ['has', 'point_count'],
+                'paint': {
+                'circle-color': [
+                    'step',
+                    ['get', 'point_count'],
+                    'rgba(0, 87, 229, .25)', 100,
+                    'rgba(0, 106, 210, .5)', 750,
+                    'rgba(0, 49, 74.9, .5)'
+                    ],
+                'circle-radius': [
+                'step',
+                    ['get', 'point_count'],
+                    20, 100,
+                    30, 750,
+                    40
+                    ]
+                },
+                'showButton': false,
+                'inLegend' : false
+            },
+            {
+                'id': 'cluster-count',
+                'type': 'symbol',
+                'source': 'monitoring_location_summary',
+                'filter': ['has', 'point_count'],
+                'layout': {
+                    'visibility': 'visible',
+                    'text-field': '{point_count_abbreviated}' ,
+                    'text-font': [
+                        'Roboto Regular'
+                    ],
+                    'text-size': 12,
+                    'symbol-placement': 'point'
+                },
+                'paint': {
+                    'text-color': 'rgba(0,0,0, 1)',
+                    'text-halo-width': 1,
+                    'text-halo-blur': 1,
+                    'text-halo-color': 'rgba(255,255,255, 1)',
+                },
+                'showButton': false,
+                'inLegend' : false
+            },
+            {
+                'id': 'unclustered-point',
+                'type': 'circle',
+                'source': 'monitoring_location_summary',
+                'layout': {
+                    'visibility': 'visible'
+                },
+                'filter': ['!', ['has', 'point_count']],
+                'paint': {
+                    'circle-color': '#fff',
+                    'circle-radius': 7,
+                    'circle-stroke-width': 1,
+                    'circle-stroke-color': '#11b4da'
+                },
+                'showButton': false,
+                'inLegend' : false
+            },
+            {
+                'id': 'site names - delaware',
+                'type': 'symbol',
+                'source': 'monitoring_location_summary',
+                'layout': {
+                    'visibility': 'none',
+                    'text-field': '{site_id}' ,
+                    'text-font': [
+                        'Roboto Regular'
+                    ],
+                    'text-size': 12,
+                    'symbol-placement': 'point',
+                    'text-line-height': 1.2,
+                    'text-justify': 'center',
+                    'text-anchor': 'bottom',
+                    'text-offset': [
+                        0,
+                        -1.5
+                    ]
+                },
+                'paint': {
+                    'text-color': 'rgba(0, 0, 0, 0.5)',
+                    'text-halo-width': 1,
+                    'text-halo-blur': 1,
+                    'text-halo-color': 'rgba(255,255,255, 1)',
+                },
+                'showButton': true,
+                'inLegend' : false
             },
             {
                 'filter': ['all', ['==', '$type', 'Point'],
