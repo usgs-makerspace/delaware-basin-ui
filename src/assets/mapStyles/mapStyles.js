@@ -15,7 +15,10 @@ export default {
             },
             monitoring_location_summary: {
                 type: 'geojson',
-                data: 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson'
+                data: 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson',
+                cluster: true,
+                clusterMaxZoom: 10,
+                clusterRadius: 50
             },
             HRU: {
                 type: 'vector',
@@ -1013,77 +1016,86 @@ export default {
                 'showButton': true,
                 'inLegend' : true
             },
+            // {
+            //     'id': 'monitoring location - delaware',
+            //     'type': 'circle',
+            //     'source': 'monitoring_location_summary',
+            //     'layout': {
+            //         'visibility': 'visible'
+            //     },
+            //     'paint': {
+            //         'circle-color': '#fff',
+            //         'circle-radius': 4,
+            //         'circle-stroke-width': 1,
+            //         'circle-stroke-color': '#11b4da'
+            //     },
+            //     'showButton': true,
+            //     'inLegend' : true
+            // },
+
             {
-                'id': 'monitoring location - delaware',
+                'id': 'clusters',
                 'type': 'circle',
                 'source': 'monitoring_location_summary',
                 'layout': {
                     'visibility': 'visible'
                 },
+                'filter': ['has', 'point_count'],
                 'paint': {
-                    'circle-color': '#fff',
-                    'circle-radius': 4,
-                    'circle-stroke-width': 1,
-                    'circle-stroke-color': '#11b4da'
+                // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
+                // with three steps to implement three types of circles:
+                //   * Blue, 20px circles when point count is less than 100
+                //   * Yellow, 30px circles when point count is between 100 and 750
+                //   * Pink, 40px circles when point count is greater than or equal to 750
+                'circle-color': [
+                    'step',
+                    ['get', 'point_count'],
+                    '#51bbd6', 100,
+                    '#f1f075', 750,
+                    '#f28cb1'
+                    ],
+                'circle-radius': [
+                'step',
+                    ['get', 'point_count'],
+                    20, 100,
+                    30, 750,
+                    40
+                    ]
                 },
                 'showButton': true,
-                'inLegend' : true
+                'inLegend' : false
             },
-
-            // {
-            //     'id': 'clusters',
-            //     'type': 'circle',
-            //     'source': 'monitoring_location_summary',
-            //     'filter': ['has', 'point_count'],
-            //     'paint': {
-            //     // Use step expressions (https://docs.mapbox.com/mapbox-gl-js/style-spec/#expressions-step)
-            //     // with three steps to implement three types of circles:
-            //     //   * Blue, 20px circles when point count is less than 100
-            //     //   * Yellow, 30px circles when point count is between 100 and 750
-            //     //   * Pink, 40px circles when point count is greater than or equal to 750
-            //     'circle-color': [
-            //         'step',
-            //         ['get', 'point_count'],
-            //         '#51bbd6',
-            //         100,
-            //         '#f1f075',
-            //         750,
-            //         '#f28cb1'
-            //         ],
-            //     'circle-radius': [
-            //     'step',
-            //         ['get', 'point_count'],
-            //         20,
-            //         100,
-            //         30,
-            //         750,
-            //         40
-            //         ]
-            //     }
-            // },
             // {
             //     'id': 'cluster-count',
             //     'type': 'symbol',
             //     'source': 'monitoring_location_summary',
             //     'filter': ['has', 'point_count'],
             //     'layout': {
+            //         'visibility': 'visible',
             //         'text-field': '{point_count_abbreviated}',
             //         'text-font': ['DIN Offc Pro Medium', 'Arial Unicode MS Bold'],
             //         'text-size': 12
-            //     }
+            //     },
+            //     'showButton': true,
+            //     'inLegend' : false
             // },
-            // {
-            //     'id': 'unclustered-point',
-            //     'type': 'circle',
-            //     'source': 'monitoring_location_summary',
-            //     'filter': ['!', ['has', 'point_count']],
-            //     'paint': {
-            //         'circle-color': '#11b4da',
-            //         'circle-radius': 4,
-            //         'circle-stroke-width': 1,
-            //         'circle-stroke-color': '#fff'
-            //     }
-            // },
+            {
+                'id': 'unclustered-point',
+                'type': 'circle',
+                'source': 'monitoring_location_summary',
+                'layout': {
+                    'visibility': 'visible'
+                },
+                'filter': ['!', ['has', 'point_count']],
+                'paint': {
+                    'circle-color': '#fff',
+                    'circle-radius': 7,
+                    'circle-stroke-width': 1,
+                    'circle-stroke-color': '#11b4da'
+                },
+                'showButton': true,
+                'inLegend' : false
+            },
             {
                 'id': 'flow lines - delaware',
                 'type': 'line',
