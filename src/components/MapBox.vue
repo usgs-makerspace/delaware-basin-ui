@@ -171,7 +171,7 @@
 
                 // next section controls the HRU hover effect
                 let hoveredHRUId = this.hoveredHRUId;
-                map.on("mousemove", "hydrological unit - highlight", function (e) {
+                map.on("mousemove", "hydrological unit - highlight", function(e) {
                     if (e.features.length > 0) {
                         if (hoveredHRUId) {
                             map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: false});

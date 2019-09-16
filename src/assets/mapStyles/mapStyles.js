@@ -1146,7 +1146,7 @@ export default {
                 'source': 'monitoring_location_summary',
                 'layout': {
                     'visibility': 'none',
-                    'text-field': '{site_id}, {nobsBin}, {n_obs}' ,
+                    'text-field': '{site_id}',
                     'text-font': [
                         'Roboto Regular'
                     ],
