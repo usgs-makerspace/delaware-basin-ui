@@ -174,23 +174,23 @@
                 map.on("mousemove", "hydrological unit - highlight", function(e) {
                     if (e.features.length > 0) {
                         if (hoveredHRUId) {
-                            map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, { hover: false});
+                            map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: false});
                         }
                         hoveredHRUId = e.features[0].id;
-                        map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, { hover: true});
+                        map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: true});
                     }
                 });
-                map.on("mouseleave", "HRUS Fill Colors", function() {
+                map.on("mouseleave", "HRUS Fill Colors", function () {
                     if (hoveredHRUId) {
-                        map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, { hover: false});
+                        map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: false});
                     }
-                    hoveredHRUId =  null;
+                    hoveredHRUId = null;
                 });
 
                 // next section controls clustering of monitoring locations
                 // inspect a cluster on click
-                map.on('click', 'clusters', function (e) {
-                    let features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+                map.on('click', 'clusters-monitoring-location-', function (e) {
+                    let features = map.queryRenderedFeatures(e.point, {layers: ['clusters-monitoring-location-']});
                     let clusterId = features[0].properties.cluster_id;
                     map.getSource('monitoring_location_summary').getClusterExpansionZoom(clusterId, function (err, zoom) {
                         if (err)
@@ -203,13 +203,15 @@
                     });
                 });
 
-                map.on('mouseenter', 'clusters', function () {
+                map.on('mouseenter', 'clusters-monitoring-location-', function () {
                     map.getCanvas().style.cursor = 'pointer';
                 });
-                map.on('mouseleave', 'clusters', function () {
+                map.on('mouseleave', 'clusters-monitoring-location-', function () {
                     map.getCanvas().style.cursor = '';
                 });
+
             }
+
         }
     }
 </script>
