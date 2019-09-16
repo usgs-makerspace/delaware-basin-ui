@@ -17,7 +17,7 @@ export default {
                 type: 'geojson',
                 data: 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson',
                 cluster: true,
-                clusterMaxZoom: 10,
+                clusterMaxZoom: 9,
                 clusterRadius: 50
             },
             HRU: {
@@ -1076,14 +1076,14 @@ export default {
                 'circle-color': [
                     'step',
                     ['get', 'point_count'],
-                    'rgba(0, 87, 229, .25)', 100,
-                    'rgba(0, 106, 210, .5)', 750,
+                    'rgba(0, 87, 229, .25)', 100, // if less than 101 monitoring locations in the cluster, make it this color
+                    'rgba(0, 106, 210, .5)', 750, // if there is less than 751 monitoring locations in the cluster make it this color
                     'rgba(0, 49, 74.9, .5)'
                     ],
                 'circle-radius': [
                 'step',
                     ['get', 'point_count'],
-                    20, 100,
+                    20, 100, // if there are less than 101 monitoring locations in the cluster, make it 20 px in radius
                     30, 750,
                     40
                     ]
