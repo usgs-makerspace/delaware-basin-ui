@@ -172,7 +172,6 @@
                 // next section controls the HRU hover effect
                 let hoveredHRUId = this.hoveredHRUId;
                 map.on("mousemove", "hydrological unit - highlight", function(e) {
-
                     if (e.features.length > 0) {
                         if (hoveredHRUId) {
                             map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, { hover: false});
@@ -186,6 +185,29 @@
                         map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, { hover: false});
                     }
                     hoveredHRUId =  null;
+                });
+
+                // next section controls clustering of monitoring locations
+                // inspect a cluster on click
+                map.on('click', 'clusters', function (e) {
+                    let features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] });
+                    let clusterId = features[0].properties.cluster_id;
+                    map.getSource('monitoring_location_summary').getClusterExpansionZoom(clusterId, function (err, zoom) {
+                        if (err)
+                            return;
+
+                        map.easeTo({
+                            center: features[0].geometry.coordinates,
+                            zoom: zoom
+                        });
+                    });
+                });
+
+                map.on('mouseenter', 'clusters', function () {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                map.on('mouseleave', 'clusters', function () {
+                    map.getCanvas().style.cursor = '';
                 });
 
                 // next section adds popups for monitoring locations
