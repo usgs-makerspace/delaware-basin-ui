@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- changed the zoom level at which the monitoring locations un-cluster
 - added point clustering for monitoring locations
 - modified HRU hover to better work with project
 - added 'layer-off-on-page-load' feature

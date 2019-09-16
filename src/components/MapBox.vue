@@ -209,12 +209,6 @@
                 map.on('mouseleave', 'clusters', function () {
                     map.getCanvas().style.cursor = '';
                 });
-
-                // next section adds popups for monitoring locations
-                let popup = new MglMap.Popup({closeOnClick: false})
-                        .setLngLat([-96, 37.8])
-                        .setHTML('<h1>Hello World!</h1>')
-                        .addTo(map);
             }
         }
     }
