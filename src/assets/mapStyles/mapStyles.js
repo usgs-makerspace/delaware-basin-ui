@@ -1065,7 +1065,7 @@ export default {
                 'inLegend' : true
             },
             {
-                'id': 'clusters',
+                'id': 'monitoring-location-clusters',
                 'type': 'circle',
                 'source': 'monitoring_location_summary',
                 'layout': {
@@ -1092,7 +1092,7 @@ export default {
                 'inLegend' : false
             },
             {
-                'id': 'cluster-count',
+                'id': 'monitoring-location-cluster-count',
                 'type': 'symbol',
                 'source': 'monitoring_location_summary',
                 'filter': ['has', 'point_count'],
@@ -1115,7 +1115,7 @@ export default {
                 'inLegend' : false
             },
             {
-                'id': 'unclustered-point',
+                'id': 'monitoring-location-unclustered-point',
                 'type': 'circle',
                 'source': 'monitoring_location_summary',
                 'layout': {
@@ -1123,13 +1123,22 @@ export default {
                 },
                 'filter': ['!', ['has', 'point_count']],
                 'paint': {
-                    'circle-color': '#fff',
+                    'circle-color':  {
+                        'property': 'nobsBin',
+                        'type': 'categorical',
+                        'stops': [
+                            ['1-10', '#B0F8FC'],
+                            ['10-100','#5C8AE5'],
+                            ['100-1000','#4B15D0'],
+                            ['', 'red']
+                        ]
+                    },
                     'circle-radius': 7,
                     'circle-stroke-width': 1,
                     'circle-stroke-color': '#11b4da'
                 },
                 'showButton': false,
-                'inLegend' : false
+                'inLegend' : true
             },
             {
                 'id': 'site names - delaware',
@@ -1137,7 +1146,7 @@ export default {
                 'source': 'monitoring_location_summary',
                 'layout': {
                     'visibility': 'none',
-                    'text-field': '{site_id}' ,
+                    'text-field': '{site_id}, {nobsBin}, {n_obs}' ,
                     'text-font': [
                         'Roboto Regular'
                     ],

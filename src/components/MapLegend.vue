@@ -30,29 +30,44 @@
         createLegend() {
             // get the style layers from the map styles object
             let styleLayers = mapStyles.style.layers;
-            let legendColors = [];
+            let mainLegendColors = [];
             let layers = [];
+            let monitoringLocationLegendColors = [];
+            let monitoringLocationLegendScales = [];
 
             // look through the styles layers grab all that are marked as 'inLegend': 'true'
             for (let index = 0; index < styleLayers.length; index++) {
                 if (styleLayers[index].inLegend === true) {
                     if (styleLayers[index].paint['line-color']) {
-                        legendColors.push(styleLayers[index].paint['line-color']);
+                        mainLegendColors.push(styleLayers[index].paint['line-color']);
                         layers.push(styleLayers[index].id);
                     }
                     if (styleLayers[index].paint['fill-color']) {
-                        legendColors.push(styleLayers[index].paint['fill-color']);
+                        mainLegendColors.push(styleLayers[index].paint['fill-color']);
                         layers.push(styleLayers[index].id);
+                    }
+                    // If we have monitoring locations we need to get the paint colors and associated scales
+                    if (styleLayers[index].id === 'monitoring-location-unclustered-point') {
+                        // Get color and scales and put them in an object as key value pairs
+                        for (let subIndex = 0; subIndex < styleLayers[index].paint['circle-color'].stops.length; subIndex++) {
+                            // Check to see if one of the scales is blank ''. If so, replace it with text such as 'no data'
+                            if (styleLayers[index].paint['circle-color'].stops[subIndex][0] === '') {
+                                monitoringLocationLegendScales.push('no data');
+                            } else {
+                                monitoringLocationLegendScales.push(styleLayers[index].paint['circle-color'].stops[subIndex][0]);
+                            }
+                            monitoringLocationLegendColors.push(styleLayers[index].paint['circle-color'].stops[subIndex][1]);
+                        }
                     }
                 }
             }
 
             let legend = this.legend;
             legend = document.getElementById('map_legend_container');
-
+            // Loop through the layers to get the layer names and the colors associated with them.
             for (let index = 0; index < layers.length; index++) {
                 let layer = layers[index];
-                let color = legendColors[index];
+                let color = mainLegendColors[index];
                 let item = document.createElement('div');
                 let key = document.createElement('span');
 
@@ -67,8 +82,33 @@
                 item.appendChild(key);
                 item.appendChild(value);
                 legend.appendChild(item);
-        }
-      }
+            }
+
+            // If we have monitoring locations colors and scales add them to the legend
+            if (monitoringLocationLegendColors && monitoringLocationLegendScales) {
+                legend.appendChild(document.createElement('hr'));
+                legend.appendChild(document.createTextNode('observations at location'));
+                for (let index = 0; index < monitoringLocationLegendColors.length; index++) {
+                    let layer = monitoringLocationLegendScales[index];
+                    let color = monitoringLocationLegendColors[index];
+                    let item = document.createElement('div');
+                    let key = document.createElement('span');
+
+                    key.style.backgroundColor = color;
+                    key.style.marginRight = '5px';
+                    key.style.display = 'inline-block';
+                    key.style.height = '10px';
+                    key.style.width = '10px';
+                    key.style.borderRadius = '50%'
+                    let value = document.createElement('span');
+
+                    value.innerHTML = layer;
+                    item.appendChild(key);
+                    item.appendChild(value);
+                    legend.appendChild(item);
+                }
+            }
+        },
     }
   }
 </script>
