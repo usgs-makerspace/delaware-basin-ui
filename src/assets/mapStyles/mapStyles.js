@@ -1130,6 +1130,7 @@ export default {
                             ['1-10', '#B0F8FC'],
                             ['10-100','#5C8AE5'],
                             ['100-1000','#4B15D0'],
+                            ['1000+','yellow'],
                             ['', 'red']
                         ]
                     },
@@ -1146,7 +1147,7 @@ export default {
                 'source': 'monitoring_location_summary',
                 'layout': {
                     'visibility': 'none',
-                    'text-field': '{site_id}',
+                    'text-field': '{site_id} | {n_obs} | {latitude} | {longitude}',
                     'text-font': [
                         'Roboto Regular'
                     ],

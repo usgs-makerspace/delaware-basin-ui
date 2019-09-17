@@ -92,7 +92,7 @@
                 container: 'map',
                 zoom: 6,
                 minZoom: 3,
-                maxZoom: 14,
+                maxZoom: 22,
                 center: [-75.072994, 40.544454],
                 pitch: 0, // tips the map from 0 to 60 degrees
                 bearing: 0, // starting rotation of the map from 0 to 360
