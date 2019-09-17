@@ -989,7 +989,7 @@ export default {
                 'inLegend' : false
             },
             {
-                'id': 'water bodies - delaware',
+                'id': 'NHD water bodies',
                 'type': 'fill',
                 'source': 'delaware_basin_tiles',
                 'source-layer': 'nhd_hires_waterbodies',
@@ -1003,7 +1003,7 @@ export default {
                 'inLegend' : true
             },
             {
-                'id': 'flow lines - delaware',
+                'id': 'NHD flow lines',
                 'type': 'line',
                 'source': 'delaware_basin_tiles',
                 'source-layer': 'nhd_hires_flowlines',
@@ -1017,7 +1017,7 @@ export default {
                 'inLegend' : true
             },
             {
-                'id': 'rivers - delaware',
+                'id': ' PRMS rivers',
                 'type': 'line',
                 'source': 'delaware_basin_tiles',
                 'source-layer': 'delaware_PRMS_streams',
@@ -1134,7 +1134,7 @@ export default {
                             ['', 'red']
                         ]
                     },
-                    'circle-radius': 7,
+                    'circle-radius': 4,
                     'circle-stroke-width': 1,
                     'circle-stroke-color': '#11b4da'
                 },
