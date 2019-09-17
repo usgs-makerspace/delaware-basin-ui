@@ -17,7 +17,7 @@ export default {
                 type: 'geojson',
                 data: 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson',
                 cluster: true,
-                clusterMaxZoom: 9,
+                clusterMaxZoom: 8,
                 clusterRadius: 50
             },
             HRU: {
