@@ -11,7 +11,9 @@ export default {
                 // If you are setting up a local build, you can uncomment the following
                 // URL assignment to pull the HRU tiles from S3 so that no local tile
                 // server is required:
-                'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf']
+                // 'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
+                "minzoom": 3,
+                "maxzoom": 14
             },
             monitoring_location_summary: {
                 type: 'geojson',
@@ -20,30 +22,33 @@ export default {
                 clusterMaxZoom: 8,
                 clusterRadius: 50
             },
+            states: {
+                type: 'geojson',
+                data: 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/states_500k.geojson'
+            },
             HRU: {
                 type: 'vector',
-                'tiles': ['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf']
+                'tiles': ['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
+                "minzoom": 3,
+                "maxzoom": 14
             },
             openmaptiles: {
                 type: 'vector',
-                'tiles': ['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/openmaptiles/{z}/{x}/{y}.pbf']
+                'tiles': ['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/openmaptiles/{z}/{x}/{y}.pbf'],
+                "minzoom": 3,
+                "maxzoom": 14
             },
         },
         'sprite': '',
         'glyphs': 'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf',
         'layers': [
             {
-                'id': 'Background',
-                'type': 'background',
-                'layout': {
-                    'visibility': 'visible'
+                "id": "background",
+                "paint": {
+                    "background-color": "hsl(47, 26%, 93%)"
                 },
-                'paint': {
-                    'background-color': 'rgb(156, 138, 82)',
-                    'background-opacity': .1
-                },
-                'showButton': false,
-                'inLegend' : false
+                "type": "background",
+                'showButton': false
             },
             {
                 'filter': ['all', ['==', '$type', 'Polygon'],
@@ -57,6 +62,8 @@ export default {
                     'fill-color': 'hsl(47, 13%, 86%)',
                     'fill-opacity': 0.7
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'landuse',
                 'type': 'fill',
@@ -70,6 +77,8 @@ export default {
                     'fill-color': 'hsl(82, 46%, 72%)',
                     'fill-opacity': 0.45
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'landcover',
                 'type': 'fill',
@@ -85,10 +94,12 @@ export default {
                         'base': 1,
                         'stops': [
                             [8, 0.6],
-                            [22, 1]
+                            [23, 1]
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'landcover',
                 'type': 'fill',
@@ -104,6 +115,8 @@ export default {
                     'fill-color': 'rgba(232, 214, 38, 1)',
                     'fill-opacity': 0.3
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'landcover',
                 'type': 'fill',
@@ -119,6 +132,8 @@ export default {
                 'paint': {
                     'fill-color': '#eae0d0'
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'landuse',
                 'type': 'fill',
@@ -138,6 +153,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'landcover',
                 'type': 'fill',
@@ -167,6 +184,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'waterway',
                 'type': 'line',
@@ -193,6 +212,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'waterway',
                 'type': 'line',
@@ -220,6 +241,8 @@ export default {
                     },
                     'line-dasharray': [2, 1]
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'waterway',
                 'type': 'line',
@@ -239,7 +262,6 @@ export default {
                     'line-cap': 'butt',
                     'line-join': 'miter'
                 },
-                'minzoom': 0,
                 'paint': {
                     'line-color': 'hsl(34, 12%, 66%)',
                     'line-dasharray': [3, 3],
@@ -251,6 +273,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -261,7 +285,7 @@ export default {
                 'id': 'building',
                 'paint': {
                     'fill-antialias': true,
-                    'fill-color': 'rgba(222, 211, 190, 1)',
+                    'fill-color': 'rgba(232, 211, 190, 1)',
                     'fill-opacity': {
                         'base': 1,
                         'stops': [
@@ -276,6 +300,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'building',
                 'type': 'fill',
@@ -291,6 +317,7 @@ export default {
                     'text-size': 10
                 },
                 'minzoom': 17,
+                'maxzoom': 23,
                 'paint': {
                     'text-color': 'rgba(212, 177, 146, 1)'
                 },
@@ -316,6 +343,8 @@ export default {
                     'fill-color': 'hsl(47, 26%, 88%)',
                     'fill-antialias': true
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'showButton': false,
                 'inLegend' : false
             },
@@ -342,6 +371,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'showButton': false,
                 'inLegend' : false
             },
@@ -355,6 +386,8 @@ export default {
                     'fill-color': 'hsl(47, 26%, 88%)',
                     'fill-opacity': 0.5
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'fill',
@@ -381,6 +414,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -406,10 +441,11 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 13,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'minzoom': 13,
                 'showButton': false,
                 'inLegend' : false
             },
@@ -434,6 +470,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -461,6 +499,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -478,7 +518,6 @@ export default {
                 'metadata': {
                     'mapbox:group': '1444849345966.4436'
                 },
-                'minzoom': 4,
                 'paint': {
                     'fill-color': 'rgba(255, 255, 255, 1)',
                     'fill-opacity': {
@@ -489,6 +528,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 4,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'aeroway',
                 'type': 'fill',
@@ -509,6 +550,7 @@ export default {
                     'mapbox:group': '1444849345966.4436'
                 },
                 'minzoom': 12,
+                'maxzoom': 23,
                 'paint': {
                     'line-color': 'rgba(255, 255, 255, 1)',
                     'line-opacity': 1,
@@ -540,6 +582,7 @@ export default {
                     'mapbox:group': '1444849345966.4436'
                 },
                 'minzoom': 4,
+                'maxzoom': 23,
                 'paint': {
                     'line-color': 'rgba(255, 255, 255, 1)',
                     'line-opacity': 1,
@@ -576,6 +619,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -601,6 +646,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -627,6 +674,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -651,6 +700,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -673,6 +724,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -705,6 +758,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'waterway',
                 'type': 'line',
@@ -730,6 +785,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'waterway',
                 'type': 'line',
@@ -763,6 +820,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -796,6 +855,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -822,6 +883,8 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
@@ -848,53 +911,15 @@ export default {
                         ]
                     }
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
                 'showButton': false,
                 'inLegend' : false
             },
-            {
-                'filter': ['in', 'admin_level', 4, 6, 8],
-                'id': 'admin_sub',
-                'layout': {
-                    'visibility': 'visible'
-                },
-                'paint': {
-                    'line-color': 'hsla(0, 0%, 60%, 0.5)',
-                    'line-dasharray': [2, 1]
-                },
-                'source': 'openmaptiles',
-                'source-layer': 'boundary',
-                'type': 'line',
-                'showButton': false,
-                'inLegend' : false
-            },
-            {
-                'filter': ['all', ['<=', 'admin_level', 2],
-                    ['==', '$type', 'LineString']
-                ],
-                'id': 'admin_country',
-                'layout': {
-                    'line-cap': 'round',
-                    'line-join': 'round'
-                },
-                'paint': {
-                    'line-color': 'hsl(0, 0%, 60%)',
-                    'line-width': {
-                        'base': 1.3,
-                        'stops': [
-                            [3, 0.5],
-                            [22, 15]
-                        ]
-                    }
-                },
-                'source': 'openmaptiles',
-                'source-layer': 'boundary',
-                'type': 'line',
-                'showButton': false,
-                'inLegend' : false
-            },
+
             {
                 'filter': ['all', ['==', '$type', 'Point'],
                     ['==', 'rank', 1]
@@ -911,6 +936,7 @@ export default {
                     'visibility': 'visible'
                 },
                 'minzoom': 14,
+                'maxzoom': 23,
                 'paint': {
                     'text-color': '#666',
                     'text-halo-blur': 1,
@@ -946,6 +972,8 @@ export default {
                     'text-halo-color': 'hsl(0, 0%, 100%)',
                     'text-halo-width': 2
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'transportation_name',
                 'type': 'symbol',
@@ -960,6 +988,8 @@ export default {
                 'paint': {
                     'fill-color': 'hsl(205, 56%, 73%)'
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'water',
                 'type': 'fill',
@@ -999,6 +1029,8 @@ export default {
                 'paint': {
                     'fill-color': 'hsl(205, 92%, 49%)'
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'showButton': true,
                 'inLegend' : true
             },
@@ -1027,6 +1059,8 @@ export default {
                 'paint': {
                     'line-color': 'red'
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'showButton': true,
                 'inLegend' : true
             },
@@ -1046,6 +1080,8 @@ export default {
                         0
                     ]
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'showButton': true,
                 'inLegend' : false
             },
@@ -1054,13 +1090,29 @@ export default {
                 'type': 'line',
                 'source': 'HRU',
                 'source-layer': 'hrus',
-                'minzoom': 8,
                 'layout': {
                     'visibility': 'none'
                 },
                 'paint': {
                     'line-color': 'rgba(57, 79, 87, .5)'
                 },
+                'minzoom': 8,
+                'maxzoom': 23,
+                'showButton': true,
+                'inLegend' : true
+            },
+            {
+                'id': 'state boundaries',
+                'layout': {
+                    'visibility': 'visible'
+                },
+                'paint': {
+                    'line-color': 'rgba(0, 0, 0, 0.5)'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'source': 'states',
+                'type': 'line',
                 'showButton': true,
                 'inLegend' : true
             },
@@ -1076,7 +1128,7 @@ export default {
                 'circle-color': [
                     'step',
                     ['get', 'point_count'],
-                    'rgba(0, 87, 229, .25)', 100, // if less than 101 monitoring locations in the cluster, make it this color
+                    'rgba(0, 87, 239, .25)', 100, // if less than 101 monitoring locations in the cluster, make it this color
                     'rgba(0, 106, 210, .5)', 750, // if there is less than 751 monitoring locations in the cluster make it this color
                     'rgba(0, 49, 74.9, .5)'
                     ],
@@ -1088,6 +1140,8 @@ export default {
                     40
                     ]
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'showButton': false,
                 'inLegend' : false
             },
@@ -1111,6 +1165,8 @@ export default {
                     'text-halo-blur': 1,
                     'text-halo-color': 'rgba(255,255,255, 1)',
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'showButton': false,
                 'inLegend' : false
             },
@@ -1127,22 +1183,51 @@ export default {
                         'property': 'nobsBin',
                         'type': 'categorical',
                         'stops': [
-                            ['1-10', '#B0F8FC'],
-                            ['10-100','#5C8AE5'],
-                            ['100-1000','#4B15D0'],
-                            ['1000+','yellow'],
-                            ['', 'red']
+                            ['1-10', '#A1F7FA'],
+                            ['10-100','#6A6EE7'],
+                            ['100-1000','#C239D4'],
+                            ['1000+','#C10F32']
                         ]
                     },
-                    'circle-radius': 4,
+                    'circle-radius': 5,
                     'circle-stroke-width': 1,
                     'circle-stroke-color': '#11b4da'
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'showButton': false,
                 'inLegend' : true
             },
             {
-                'id': 'site names - delaware',
+                'id': 'monitoring-location-unclustered-point-',
+                'type': 'circle',
+                'source': 'monitoring_location_summary',
+                'layout': {
+                    'visibility': 'visible'
+                },
+                'filter': ['!', ['has', 'point_count']],
+                'paint': {
+                    'circle-color':  {
+                        'property': 'nobsBin',
+                        'type': 'categorical',
+                        'stops': [
+                            ['1-10', '#A1F7FA'],
+                            ['10-100','#6A6EE7'],
+                            ['100-1000','#C239D4'],
+                            ['1000+','#C10F32']
+                        ]
+                    },
+                    'circle-radius': 5,
+                    'circle-stroke-width': 1,
+                    'circle-stroke-color': '#11b4da'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButton': false,
+                'inLegend' : true
+            },
+            {
+                'id': 'site names',
                 'type': 'symbol',
                 'source': 'monitoring_location_summary',
                 'layout': {
@@ -1167,6 +1252,8 @@ export default {
                     'text-halo-blur': 1,
                     'text-halo-color': 'rgba(255,255,255, 1)',
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'showButton': true,
                 'inLegend' : false
             },
