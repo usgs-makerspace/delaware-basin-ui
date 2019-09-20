@@ -37,7 +37,10 @@
           @click="changeToResponsiveElement('mapbox_component-streams-toggle')"
         ><font-awesome-icon icon="water" />
         </a>
-        <a @click="reduceElement"><font-awesome-icon class="font-awesome-close" icon="minus-square" /></a>
+        <a @click="reduceElement"><font-awesome-icon
+          class="font-awesome-close"
+          icon="minus-square"
+        /></a>
       </div>
     </div>
     <div id="mapContainer">
