@@ -11,7 +11,7 @@ export default {
                 // If you are setting up a local build, you can uncomment the following
                 // URL assignment to pull the HRU tiles from S3 so that no local tile
                 // server is required:
-                // 'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
+                'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
                 "minzoom": 3,
                 "maxzoom": 14
             },
@@ -25,6 +25,12 @@ export default {
             states: {
                 type: 'geojson',
                 data: 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/states_500k.geojson'
+            },
+            nhd_streams: {
+                type: 'vector',
+                'tiles':['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/nhd_order_tiles/{z}/{x}/{y}.pbf'],
+                "minzoom": 3, // setting this to equal the minzoom of main map, real tile extent is 0
+                "maxzoom": 10  // setting this to equal real tile extent of 10 so that we can use Mapbox gl to over zoom
             },
             HRU: {
                 type: 'vector',
@@ -48,7 +54,9 @@ export default {
                     "background-color": "hsl(47, 26%, 93%)"
                 },
                 "type": "background",
-                'showButton': false
+                'showButtonLayerToggleLayerToggle': false,
+                'showButtonLayerToggleStreamToggle': false,
+                'inLegend': false                
             },
             {
                 'filter': ['all', ['==', '$type', 'Polygon'],
@@ -67,7 +75,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'landuse',
                 'type': 'fill',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonLayerToggleStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -82,7 +91,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'landcover',
                 'type': 'fill',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonLayerToggleStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -103,7 +113,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'landcover',
                 'type': 'fill',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonLayerToggleStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -120,7 +131,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'landcover',
                 'type': 'fill',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -137,7 +149,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'landuse',
                 'type': 'fill',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -158,7 +171,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'landcover',
                 'type': 'fill',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -192,7 +206,8 @@ export default {
                 'layout': {
                     'visibility': 'visible'
                 },
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -220,7 +235,8 @@ export default {
                 'layout': {
                     'visibility': 'visible'
                 },
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -249,7 +265,8 @@ export default {
                 'layout': {
                     'visibility': 'visible'
                 },
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -278,7 +295,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -305,7 +323,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'building',
                 'type': 'fill',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -324,7 +343,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'housenumber',
                 'type': 'symbol',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -345,7 +365,8 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -373,7 +394,8 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -391,7 +413,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'fill',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -419,7 +442,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -446,7 +470,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -475,7 +500,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -504,7 +530,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -533,7 +560,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'aeroway',
                 'type': 'fill',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -565,7 +593,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'aeroway',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -597,7 +626,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'aeroway',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -624,7 +654,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -651,7 +682,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -679,7 +711,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -705,7 +738,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -729,7 +763,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -763,7 +798,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'waterway',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -790,7 +826,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'waterway',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -825,7 +862,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -860,7 +898,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -888,7 +927,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -916,7 +956,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation',
                 'type': 'line',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
 
@@ -946,7 +987,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'poi',
                 'type': 'symbol',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -977,7 +1019,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'transportation_name',
                 'type': 'symbol',
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -996,7 +1039,8 @@ export default {
                 'layout': {
                     'visibility': 'visible'
                 },
-                'showButton': true,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
             },
 
@@ -1009,13 +1053,16 @@ export default {
                     'fill-color': 'hsl(205, 56%, 73%)',
                     'fill-opacity': 0.7
                 },
+                'minzoom': 3,
+                'maxzoom': 23,
                 'source': 'openmaptiles',
                 'source-layer': 'water',
                 'type': 'fill',
                 'layout': {
                     'visibility': 'visible'
                 },
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -1031,8 +1078,178 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': true,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
+            },
+            {
+                "id": "stream_order_1",
+                'type': 'line',
+                'source': 'nhd_streams',
+                'source-layer': 'nhdplus_order_1',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'line-color': '#00E5C7'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': true,
+                'inLegend' : false
+            },
+            {
+                "id": "stream_order_2",
+                'type': 'line',
+                'source': 'nhd_streams',
+                'source-layer': 'nhdplus_order_2',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'line-color': '#00D4E0'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': true,
+                'inLegend' : false
+            },
+            {
+                "id": "stream_order_3",
+                'type': 'line',
+                'source': 'nhd_streams',
+                'source-layer': 'nhdplus_order_3',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'line-color': '#00A8DC'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': true,
+                'inLegend' : false
+            },
+            {
+                "id": "stream_order_4",
+                'type': 'line',
+                'source': 'nhd_streams',
+                'source-layer': 'nhdplus_order_4',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'line-color': '#007ED8'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': true,
+                'inLegend' : false
+            },
+            {
+                "id": "stream_order_5",
+                'type': 'line',
+                'source': 'nhd_streams',
+                'source-layer': 'nhdplus_order_5',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'line-color': '#0055D4'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': true,
+                'inLegend' : false
+            },
+            {
+                "id": "stream_order_6",
+                'type': 'line',
+                'source': 'nhd_streams',
+                'source-layer': 'nhdplus_order_6',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'line-color': '#002ECF'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': true
+            },
+            {
+                "id": "stream_order_7",
+                'type': 'line',
+                'source': 'nhd_streams',
+                'source-layer': 'nhdplus_order_7',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'line-color': '#0008CB'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': true,
+                'inLegend' : false
+            },
+            {
+                "id": "stream_order_8",
+                'type': 'line',
+                'source': 'nhd_streams',
+                'source-layer': 'nhdplus_order_8',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'line-color': '#1B00C7'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': true,
+                'inLegend' : false
+            },
+            {
+                "id": "stream_order_9",
+                'type': 'line',
+                'source': 'nhd_streams',
+                'source-layer': 'nhdplus_order_9',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'line-color': '#3D00C3'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': true,
+                'inLegend' : false
+            },
+            {
+                "id": "stream_order_minus_9",
+                'type': 'line',
+                'source': 'nhd_streams',
+                'source-layer': '#5F00BF',
+                'layout': {
+                    'visibility': 'none'
+                },
+                'paint': {
+                    'line-color': 'rgba(115, 255, 255, 1)'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': true,
+                'inLegend' : false
             },
             {
                 'id': 'NHD flow lines',
@@ -1045,7 +1262,8 @@ export default {
                 'paint': {
                     'line-color': 'orange'
                 },
-                'showButton': true,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -1061,7 +1279,8 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': true,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -1082,7 +1301,8 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': true,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -1096,9 +1316,10 @@ export default {
                 'paint': {
                     'line-color': 'rgba(57, 79, 87, .5)'
                 },
-                'minzoom': 8,
+                'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': true,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -1113,7 +1334,8 @@ export default {
                 'maxzoom': 23,
                 'source': 'states',
                 'type': 'line',
-                'showButton': true,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -1142,7 +1364,8 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -1167,7 +1390,8 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -1195,7 +1419,8 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -1223,7 +1448,8 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': false,
+                'showButtonLayerToggle': false,
+                'showButtonStreamToggle': false,
                 'inLegend' : true
             },
             {
@@ -1254,7 +1480,8 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButton': true,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             },
             {
@@ -1284,7 +1511,8 @@ export default {
                 'source': 'openmaptiles',
                 'source-layer': 'place',
                 'type': 'symbol',
-                'showButton': true,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
                 'inLegend' : false
             }
         ]
