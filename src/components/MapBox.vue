@@ -37,10 +37,10 @@
           @click="changeToResponsiveElement('mapbox_component-streams-toggle')"
         ><font-awesome-icon icon="water" />
         </a>
-        <a @click="reduceElement"><font-awesome-icon
-          class="font-awesome-close"
-          icon="minus-square"
-        /></a>
+<!--        <a @click="reduceElement"><font-awesome-icon-->
+<!--          class="font-awesome-close"-->
+<!--          icon="minus-square"-->
+<!--        /></a>-->
       </div>
     </div>
     <div id="mapContainer">
@@ -77,6 +77,11 @@
           position="top-right"
         />
       </MglMap>
+
+      <!--    next section is for the monitoring location provider filters -->
+      <nav id='filter-group' class='filter-group'>there's something</nav>
+
+
     </div>
   </div>
 </template>
@@ -125,7 +130,7 @@
         methods: {
             reduceElement: function() {
                 console.log('clicked this minus')
-            } ,
+            },
 
             // Switch to a mobile menu (add the 'responsive' class name) when user clicks the 'layer-group' icon.
             // Note: this method is bound to the anchor ('a') element that contains the 'layer-group' icon.
@@ -138,6 +143,8 @@
                 }
             },
             onMapLoaded(event) {
+                // this line or
+
                 let map = event.map; // This gives us access to the map as an object but only after the map has loaded
 
                 // For now, I am going to duplicate this code section for each set of toggles (currently layers and streams), ideally this would be
@@ -438,5 +445,58 @@
       text-align: left;
     }
   }
+
+
+
+/*  next section of styles are for the providers toggles */
+  .filter-group {
+    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font-weight: 600;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 1;
+    border-radius: 3px;
+    width: 120px;
+    color: #fff;
+  }
+
+  .filter-group input[type=checkbox]:first-child + label {
+    border-radius: 3px 3px 0 0;
+  }
+
+  .filter-group label:last-child {
+    border-radius: 0 0 3px 3px;
+    border: none;
+  }
+
+  .filter-group input[type=checkbox] {
+    display: none;
+  }
+
+  .filter-group input[type=checkbox] + label {
+    background-color: #3386c0;
+    display: block;
+    cursor: pointer;
+    padding: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
+  }
+
+  .filter-group input[type=checkbox] + label {
+    background-color: #3386c0;
+    text-transform: capitalize;
+  }
+
+  .filter-group input[type=checkbox] + label:hover,
+  .filter-group input[type=checkbox]:checked + label {
+    background-color: #4ea0da;
+  }
+
+  .filter-group input[type=checkbox]:checked + label:before {
+    content: '✔';
+    margin-right: 5px;
+  }
+
+
 
 </style>
