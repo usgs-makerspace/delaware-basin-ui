@@ -1458,7 +1458,7 @@ export default {
                 'source': 'monitoring_location_summary',
                 'layout': {
                     'visibility': 'none',
-                    'text-field': '{site_id} | {n_obs} | {latitude} | {longitude}',
+                    'text-field': '{site_id} | {n_obs} | {latitude} | {longitude} | {source}',
                     'text-font': [
                         'Roboto Regular'
                     ],

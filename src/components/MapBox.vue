@@ -37,10 +37,6 @@
           @click="changeToResponsiveElement('mapbox_component-streams-toggle')"
         ><font-awesome-icon icon="water" />
         </a>
-<!--        <a @click="reduceElement"><font-awesome-icon-->
-<!--          class="font-awesome-close"-->
-<!--          icon="minus-square"-->
-<!--        /></a>-->
       </div>
     </div>
     <div id="mapContainer">
@@ -79,7 +75,7 @@
       </MglMap>
 
       <!--    next section is for the monitoring location provider filters -->
-      <nav id='filter-group' class='filter-group'>there's something</nav>
+      <nav id='filter-group' class='filter-group'><a @click="toggleLocations">there's something</a></nav>
 
 
     </div>
@@ -124,14 +120,11 @@
                 pitch: 0, // tips the map from 0 to 60 degrees
                 bearing: 0, // starting rotation of the map from 0 to 360
                 hoveredHRUId: null,
-                legendTitle: 'Legend'
+                legendTitle: 'Legend',
+                map: null
             }
         },
         methods: {
-            reduceElement: function() {
-                console.log('clicked this minus')
-            },
-
             // Switch to a mobile menu (add the 'responsive' class name) when user clicks the 'layer-group' icon.
             // Note: this method is bound to the anchor ('a') element that contains the 'layer-group' icon.
             changeToResponsiveElement: function(targetElement) {
@@ -142,11 +135,18 @@
                     mapboxComponentLayerToggle.className = "mapbox_component-topnav";
                 }
             },
+            toggleLocations: function(e) {
+                let features = this.map.queryRenderedFeatures({ layers: ['monitoring-location-unclustered-point'] });
+                console.log('features? ' + JSON.stringify(features))
+                console.log('clicked the link')
+            },
             onMapLoaded(event) {
-                // this line or
+                // this line for filtering by provider
+                let filterGroup = document.getElementById('filter-group');
 
-                let map = event.map; // This gives us access to the map as an object but only after the map has loaded
+                this.map = event.map; // This gives us access to the map as an object but only after the map has loaded
 
+                let map = this.map
                 // For now, I am going to duplicate this code section for each set of toggles (currently layers and streams), ideally this would be
                 // in separate components, but for prototyping purposes this is fine for now.
 
@@ -303,8 +303,16 @@
                     map.getCanvas().style.cursor = '';
                 });
 
-            }
 
+// section starts provider filtering
+                function grabFeatures() {
+                    let features = map.queryRenderedFeatures({ layers: ['monitoring-location-unclustered-point'] });
+                    console.log('features? ' + JSON.stringify(features))
+                };
+                map.on('zoomend', grabFeatures);
+
+
+            }
         }
     }
 </script>
