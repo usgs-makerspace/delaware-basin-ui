@@ -328,6 +328,18 @@
                                 "type": "geojson",
                                 "data": monitoringLocationList
                             });
+
+
+                            let uniqueDataProviders = [];
+                            monitoringLocationList.features.forEach(function(feature) {
+                                let providerName = feature.properties['source'];
+                                if (!uniqueDataProviders.includes(providerName)) {
+                                    uniqueDataProviders.push(providerName);
+                                }
+                            });
+                            console.log('this is how many ' + uniqueDataProviders.length);
+
+
                             monitoringLocationList.features.forEach(function(feature) {
                                 // Check the value of the 'source' property of the current GeoJSON 'feature' and create
                                 // a new map layer for it--provided that a map layer for that type does not already exist.
