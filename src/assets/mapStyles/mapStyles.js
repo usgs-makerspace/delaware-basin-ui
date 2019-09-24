@@ -1328,7 +1328,7 @@ export default {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'line-color': 'rgba(0, 0, 0, 0.5)'
+                    'line-color': 'rgba(173, 166, 163, 1)'
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
@@ -1364,7 +1364,7 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': false,
+                'showButtonLayerToggle': true,
                 'showButtonStreamToggle': false,
                 'inLegend' : false
             },
@@ -1375,7 +1375,7 @@ export default {
                 'filter': ['has', 'point_count'],
                 'layout': {
                     'visibility': 'visible',
-                    'text-field': '{point_count_abbreviated}' ,
+                    'text-field': '{point_count_abbreviated}',
                     'text-font': [
                         'Roboto Regular'
                     ],
@@ -1390,7 +1390,7 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': false,
+                'showButtonLayerToggle': true,
                 'showButtonStreamToggle': false,
                 'inLegend' : false
             },
@@ -1419,36 +1419,7 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': false,
-                'showButtonStreamToggle': false,
-                'inLegend' : true
-            },
-            {
-                'id': 'monitoring-location-unclustered-point-',
-                'type': 'circle',
-                'source': 'monitoring_location_summary',
-                'layout': {
-                    'visibility': 'visible'
-                },
-                'filter': ['!', ['has', 'point_count']],
-                'paint': {
-                    'circle-color':  {
-                        'property': 'nobsBin',
-                        'type': 'categorical',
-                        'stops': [
-                            ['1-10', '#A1F7FA'],
-                            ['10-100','#6A6EE7'],
-                            ['100-1000','#C239D4'],
-                            ['1000+','#C10F32']
-                        ]
-                    },
-                    'circle-radius': 5,
-                    'circle-stroke-width': 1,
-                    'circle-stroke-color': '#11b4da'
-                },
-                'minzoom': 3,
-                'maxzoom': 23,
-                'showButtonLayerToggle': false,
+                'showButtonLayerToggle': true,
                 'showButtonStreamToggle': false,
                 'inLegend' : true
             },

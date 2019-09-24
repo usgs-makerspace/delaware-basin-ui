@@ -75,9 +75,11 @@
       </MglMap>
 
       <!--    next section is for the monitoring location provider filters -->
-      <nav id='filter-group' class='filter-group'><a @click="toggleLocations">there's something</a></nav>
-
-
+      <nav
+        id="filter-group"
+        class="filter-group"
+      >
+      </nav>
     </div>
   </div>
 </template>
@@ -120,8 +122,7 @@
                 pitch: 0, // tips the map from 0 to 60 degrees
                 bearing: 0, // starting rotation of the map from 0 to 360
                 hoveredHRUId: null,
-                legendTitle: 'Legend',
-                map: null
+                legendTitle: 'Legend'
             }
         },
         methods: {
@@ -135,18 +136,10 @@
                     mapboxComponentLayerToggle.className = "mapbox_component-topnav";
                 }
             },
-            toggleLocations: function(e) {
-                let features = this.map.queryRenderedFeatures({ layers: ['monitoring-location-unclustered-point'] });
-                console.log('features? ' + JSON.stringify(features))
-                console.log('clicked the link')
-            },
             onMapLoaded(event) {
-                // this line for filtering by provider
-                let filterGroup = document.getElementById('filter-group');
+                let map = event.map; // This gives us access to the map as an object but only after the map has loaded
 
-                this.map = event.map; // This gives us access to the map as an object but only after the map has loaded
 
-                let map = this.map
                 // For now, I am going to duplicate this code section for each set of toggles (currently layers and streams), ideally this would be
                 // in separate components, but for prototyping purposes this is fine for now.
 
@@ -305,11 +298,103 @@
 
 
 // section starts provider filtering
-                function grabFeatures() {
-                    let features = map.queryRenderedFeatures({ layers: ['monitoring-location-unclustered-point'] });
-                    console.log('features? ' + JSON.stringify(features))
-                };
-                map.on('zoomend', grabFeatures);
+                let url = 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson';
+                // set up a element to contain the filter selections for monitoring locations
+                let filterGroup = document.getElementById('filter-group');
+                function status(response) {
+                    if (response.status >= 200 && response.status < 300) {
+                        return Promise.resolve(response)
+                    } else {
+                        return Promise.reject(new Error(response.statusText))
+                    }
+                }
+
+                function json(response) {
+                    return response.json()
+                }
+
+                fetch(url)
+                        .then(status)
+                        .then(json)
+                        .then(function(monitoringLocationList) {
+                            map.addSource("monitoringLocationList", {
+                                "type": "geojson",
+                                "data": monitoringLocationList
+                            });
+                            monitoringLocationList.features.forEach(function(feature) {
+                                // Check the value of the 'source' property of the current GeoJSON 'feature' and create
+                                // a new map layer for it--provided that a map layer for that type does not already exist.
+                                let providerName = feature.properties['source'];
+                                let layerID = 'provider-' + providerName;
+
+                                if (!map.getLayer(layerID)) {
+                                    map.addLayer({
+                                        'id': layerID,
+                                        'type': 'circle',
+                                        'source': 'monitoringLocationList',
+                                        'layout': {
+                                            'visibility': 'none'
+                                        },
+                                        'filter': ['==', 'source', providerName],
+                                        'paint': {
+                                            'circle-color':  {
+                                                'property': 'nobsBin',
+                                                'type': 'categorical',
+                                                'stops': [
+                                                    ['1-10', '#A1F7FA'],
+                                                    ['10-100','#6A6EE7'],
+                                                    ['100-1000','#C239D4'],
+                                                    ['1000+','#C10F32']
+                                                ]
+                                            },
+                                            'circle-opacity': 0.5,
+                                            'circle-radius': 10,
+                                            'circle-stroke-width': 1,
+                                            'circle-stroke-color': '#11b4da'
+                                        },
+                                        'minzoom': 3,
+                                        'maxzoom': 23,
+
+                                    });
+
+                                    // let popup = MglMap.Popup({closeOnClick: true})
+                                    //         .setLngLat([-74.6228, 39.795])
+                                    //         .setHTML('<h1>Hello World!</h1>')
+                                    //         .addTo(map);
+
+                                    // Add checkbox and label elements for the layer.
+                                    let input = document.createElement('input');
+                                    input.type = 'checkbox';
+                                    input.id = layerID;
+                                    input.checked = true;
+                                    filterGroup.appendChild(input);
+
+                                    let label = document.createElement('label');
+                                    label.setAttribute('for', layerID);
+                                    label.textContent = providerName;
+                                    filterGroup.appendChild(label);
+
+                                    // When the checkbox changes, update the visibility of the layer.
+                                    input.addEventListener('change', function(e) {
+                                        map.setLayoutProperty(layerID, 'visibility',
+                                                e.target.checked ? 'visible' : 'none');
+                                    });
+                                }
+                            });
+
+
+
+
+
+
+
+                        }).catch(function(error) {
+                    console.log('Request to gather the monitoring location data failed', error);
+                });
+
+
+
+
 
 
             }
