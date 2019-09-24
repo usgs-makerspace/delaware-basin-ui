@@ -1364,7 +1364,7 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
                 'inLegend' : false
             },
@@ -1390,7 +1390,7 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
                 'inLegend' : false
             },
@@ -1413,13 +1413,13 @@ export default {
                             ['1000+','#C10F32']
                         ]
                     },
-                    'circle-radius': 5,
+                    'circle-radius': 4,
                     'circle-stroke-width': 1,
                     'circle-stroke-color': '#11b4da'
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
                 'inLegend' : true
             },

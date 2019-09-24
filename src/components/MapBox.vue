@@ -16,7 +16,6 @@
           class="active"
         >Map Layers</a>
         <a
-          href="javascript:void(0);"
           class="icon"
           @click="changeToResponsiveElement('mapbox_component-layers-toggle')"
         ><font-awesome-icon icon="layer-group" />
@@ -32,10 +31,24 @@
           class="active"
         >Stream Orders</a>
         <a
-          href="javascript:void(0);"
           class="icon"
           @click="changeToResponsiveElement('mapbox_component-streams-toggle')"
         ><font-awesome-icon icon="water" />
+        </a>
+      </div>
+      <div
+        id="mapbox_component-providers-toggle"
+        class="mapbox_component-topnav"
+      >
+        <a
+          id="map-providers-label"
+          href="#"
+          class="active"
+        >Data Providers</a>
+        <a
+          class="icon"
+          @click="changeToResponsiveElement('mapbox_component-providers-toggle')"
+        ><font-awesome-icon icon="hand-holding-heart" />
         </a>
       </div>
     </div>
@@ -73,13 +86,6 @@
           position="top-right"
         />
       </MglMap>
-
-      <!--    next section is for the monitoring location provider filters -->
-      <nav
-        id="filter-group"
-        class="filter-group"
-      >
-      </nav>
     </div>
   </div>
 </template>
@@ -122,12 +128,13 @@
                 pitch: 0, // tips the map from 0 to 60 degrees
                 bearing: 0, // starting rotation of the map from 0 to 360
                 hoveredHRUId: null,
-                legendTitle: 'Legend'
+                legendTitle: 'Legend',
+                coordinates: null
             }
         },
         methods: {
             // Switch to a mobile menu (add the 'responsive' class name) when user clicks the 'layer-group' icon.
-            // Note: this method is bound to the anchor ('a') element that contains the 'layer-group' icon.
+            // Note: this method is bound to the anchor ('a') element that contains the subject related icons.
             changeToResponsiveElement: function(targetElement) {
                 let mapboxComponentLayerToggle = document.getElementById(targetElement);
                 if (mapboxComponentLayerToggle.className === "mapbox_component-topnav") {
@@ -300,7 +307,7 @@
 // section starts provider filtering
                 let url = 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson';
                 // set up a element to contain the filter selections for monitoring locations
-                let filterGroup = document.getElementById('filter-group');
+                let providersToggle = document.getElementById('mapbox_component-providers-toggle');
                 function status(response) {
                     if (response.status >= 200 && response.status < 300) {
                         return Promise.resolve(response)
@@ -326,59 +333,88 @@
                                 // a new map layer for it--provided that a map layer for that type does not already exist.
                                 let providerName = feature.properties['source'];
                                 let layerID = 'provider-' + providerName;
-
                                 if (!map.getLayer(layerID)) {
-                                    map.addLayer({
-                                        'id': layerID,
-                                        'type': 'circle',
-                                        'source': 'monitoringLocationList',
-                                        'layout': {
-                                            'visibility': 'none'
-                                        },
-                                        'filter': ['==', 'source', providerName],
-                                        'paint': {
-                                            'circle-color':  {
-                                                'property': 'nobsBin',
-                                                'type': 'categorical',
-                                                'stops': [
-                                                    ['1-10', '#A1F7FA'],
-                                                    ['10-100','#6A6EE7'],
-                                                    ['100-1000','#C239D4'],
-                                                    ['1000+','#C10F32']
-                                                ]
-                                            },
-                                            'circle-opacity': 0.5,
-                                            'circle-radius': 10,
-                                            'circle-stroke-width': 1,
-                                            'circle-stroke-color': '#11b4da'
-                                        },
-                                        'minzoom': 3,
-                                        'maxzoom': 23,
+                                    let styleObject =
+                                            {
+                                                'id': layerID,
+                                                'type': 'circle',
+                                                'source': 'monitoringLocationList',
+                                                'layout': {
+                                                    'visibility': 'none'
+                                                },
+                                                'filter': ['==', 'source', providerName],
+                                                'paint': {
+                                                    'circle-color':  {
+                                                        'property': 'nobsBin',
+                                                        'type': 'categorical',
+                                                        'stops': [
+                                                            ['1-10', '#A1F7FA'],
+                                                            ['10-100','#6A6EE7'],
+                                                            ['100-1000','#C239D4'],
+                                                            ['1000+','#C10F32']
+                                                        ]
+                                                    },
+                                                    'circle-opacity': 0.5,
+                                                    'circle-radius': 10,
+                                                    'circle-stroke-width': 1,
+                                                    'circle-stroke-color': '#11b4da'
+                                                },
+                                                'minzoom': 3,
+                                                'maxzoom': 23,
+                                            };
 
-                                    });
+                                    // Add the layer to the map
+                                    map.addLayer(styleObject);
 
-                                    // let popup = MglMap.Popup({closeOnClick: true})
-                                    //         .setLngLat([-74.6228, 39.795])
-                                    //         .setHTML('<h1>Hello World!</h1>')
-                                    //         .addTo(map);
+                                    // add the layer to the style sheet in memory
+                                    mapStyles.style.layers.push(styleObject)
+                                    console.log('***: ' + JSON.stringify(mapStyles.style.layers))
 
-                                    // Add checkbox and label elements for the layer.
-                                    let input = document.createElement('input');
-                                    input.type = 'checkbox';
-                                    input.id = layerID;
-                                    input.checked = true;
-                                    filterGroup.appendChild(input);
+                                    let link = document.createElement('a');
+                                    link.href = '#';
+                                    // We want all of these links to be off (and look off) as a default,
+                                    // so we will NOT mark them with the 'active' class.
+                                    link.classname = '';
+                                    link.textContent = 'provider-' + providerName;
+                                    // Add a click event to each toggle button to toggle the layer, also add the way
+                                    // to change the button's class so that we can see if it switched on or off.
+                                    link.onclick = function(e) {
+                                        console.log('this is styles???? ' + JSON.stringify(mapStyles.style))
+                                            let clickedLayer = this.textContent;
+                                            e.preventDefault();
+                                            e.stopPropagation();
 
-                                    let label = document.createElement('label');
-                                    label.setAttribute('for', layerID);
-                                    label.textContent = providerName;
-                                    filterGroup.appendChild(label);
+                                            let visibility = map.getLayoutProperty(clickedLayer, 'visibility');
 
-                                    // When the checkbox changes, update the visibility of the layer.
-                                    input.addEventListener('change', function(e) {
-                                        map.setLayoutProperty(layerID, 'visibility',
-                                                e.target.checked ? 'visible' : 'none');
-                                    });
+                                            if (visibility === 'visible') {
+                                                map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                                                this.className = '';
+                                            } else {
+                                                this.className = 'active';
+                                                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                                            }
+                                    };
+
+                                    let layerToggleList = document.getElementById('mapbox_component-providers-toggle');
+                                    layerToggleList.appendChild(link);
+
+                                    // // Add checkbox and label elements for the layer.
+                                    // let input = document.createElement('input');
+                                    // input.type = 'checkbox';
+                                    // input.id = layerID;
+                                    // input.checked = false;
+                                    // providersToggle.appendChild(input);
+                                    //
+                                    // let label = document.createElement('label');
+                                    // label.setAttribute('for', layerID);
+                                    // label.textContent = providerName;
+                                    // providersToggle.appendChild(label);
+                                    //
+                                    // // When the checkbox changes, update the visibility of the layer.
+                                    // input.addEventListener('change', function(e) {
+                                    //     map.setLayoutProperty(layerID, 'visibility',
+                                    //             e.target.checked ? 'visible' : 'none');
+                                    // });
                                 }
                             });
 
@@ -428,7 +464,14 @@
     color: #fff;
   }
 
-  .usa-prose{
+  #map-providers-label::after {
+    content: "|";
+    padding-left: 10px;
+    float: right;
+    color: #fff;
+  }
+
+  .usa-prose {
     border-bottom: 1px solid rgb(100,100,100);
   }
 
@@ -500,6 +543,12 @@
     color: white;
   }
 
+  /* Override the hover effect for so the 'Stream Orders' label does not appear click-able. */
+  #map-providers-label:hover {
+    background-color: #4574a3;
+    color: white;
+  }
+
   /* Add an active class to highlight the current toggle */
   .mapbox_component-topnav a.active {
     background-color: #4574a3;
@@ -538,58 +587,4 @@
       text-align: left;
     }
   }
-
-
-
-/*  next section of styles are for the providers toggles */
-  .filter-group {
-    font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
-    font-weight: 600;
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    z-index: 1;
-    border-radius: 3px;
-    width: 120px;
-    color: #fff;
-  }
-
-  .filter-group input[type=checkbox]:first-child + label {
-    border-radius: 3px 3px 0 0;
-  }
-
-  .filter-group label:last-child {
-    border-radius: 0 0 3px 3px;
-    border: none;
-  }
-
-  .filter-group input[type=checkbox] {
-    display: none;
-  }
-
-  .filter-group input[type=checkbox] + label {
-    background-color: #3386c0;
-    display: block;
-    cursor: pointer;
-    padding: 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.25);
-  }
-
-  .filter-group input[type=checkbox] + label {
-    background-color: #3386c0;
-    text-transform: capitalize;
-  }
-
-  .filter-group input[type=checkbox] + label:hover,
-  .filter-group input[type=checkbox]:checked + label {
-    background-color: #4ea0da;
-  }
-
-  .filter-group input[type=checkbox]:checked + label:before {
-    content: '✔';
-    margin-right: 5px;
-  }
-
-
-
 </style>
