@@ -329,7 +329,8 @@
                                 "data": monitoringLocationList
                             });
 
-
+                            // The next section generates the colors for the monitoring location markers
+                            // First we need to know how many data providers there are in the data
                             let uniqueDataProviders = [];
                             monitoringLocationList.features.forEach(function(feature) {
                                 let providerName = feature.properties['source'];
@@ -337,14 +338,39 @@
                                     uniqueDataProviders.push(providerName);
                                 }
                             });
-                            console.log('this is how many ' + uniqueDataProviders.length);
+                            // Next we need to generate a list of colors based on the number of providers we have.
+                            // We will use HSL colors in the format hsl((hue, saturation, lightness).
+                            // We will only adjust the hue. The 'hue' range is from 0-360, but we want to stay out the red
+                            // range so will only use 45-290. We will use 45 and 290 as our start and end, then we will
+                            // select additional points as needed based on the number of providers.
+                            let hslHues = [];
+                            let hslStartPoint = 45;
+                            let hslEndPoint = 290;
+                            let hslRange = hslEndPoint - hslStartPoint;
+                            let hslRangeDivisor = uniqueDataProviders.length - 1;
+                            let countToNextHslPoint = Math.floor(hslRange/hslRangeDivisor);
+                            // Add the start point to our array of hsl color points.
+                            hslHues.push(hslStartPoint);
+                            let hslIntermediatePoint = hslStartPoint + countToNextHslPoint;
+                            // If there is more than one intermediate hsl point, loop to add; otherwise just add the one.
 
+                            if (hslRangeDivisor > 2) {
+                                for(let index = 0; index < hslRangeDivisor-1; index++) {
+                                    hslHues.push(hslIntermediatePoint);
+                                    hslIntermediatePoint = hslIntermediatePoint + countToNextHslPoint;
+                                }
+                            } else {
+                                hslHues.push(hslIntermediatePoint);
+                            }
+                            // Add the hsl end point
+                            hslHues.push(hslEndPoint);
 
+                            let loopCount = 0;
                             monitoringLocationList.features.forEach(function(feature) {
                                 // Check the value of the 'source' property of the current GeoJSON 'feature' and create
                                 // a new map layer for it--provided that a map layer for that type does not already exist.
                                 let providerName = feature.properties['source'];
-                                let layerID = 'provider-' + providerName;
+                                let layerID = providerName;
                                 if (!map.getLayer(layerID)) {
                                     let styleObject =
                                             {
@@ -356,42 +382,31 @@
                                                 },
                                                 'filter': ['==', 'source', providerName],
                                                 'paint': {
-                                                    'circle-color':  {
-                                                        'property': 'nobsBin',
-                                                        'type': 'categorical',
-                                                        'stops': [
-                                                            ['1-10', '#A1F7FA'],
-                                                            ['10-100','#6A6EE7'],
-                                                            ['100-1000','#C239D4'],
-                                                            ['1000+','#C10F32']
-                                                        ]
-                                                    },
-                                                    'circle-opacity': 0.5,
+                                                    'circle-color':  'hsl('+ hslHues[loopCount] + ', 100%, 51%)',
+                                                    'circle-opacity': 0.1,
                                                     'circle-radius': 10,
-                                                    'circle-stroke-width': 1,
-                                                    'circle-stroke-color': '#11b4da'
+                                                    'circle-stroke-width': 2,
+                                                    'circle-stroke-color': 'hsl('+ hslHues[loopCount] + ', 100%, 51%)',
                                                 },
                                                 'minzoom': 3,
                                                 'maxzoom': 23,
                                             };
-
+                                    loopCount++;
                                     // Add the layer to the map
                                     map.addLayer(styleObject);
 
                                     // add the layer to the style sheet in memory
-                                    mapStyles.style.layers.push(styleObject)
-                                    console.log('***: ' + JSON.stringify(mapStyles.style.layers))
+                                    mapStyles.style.layers.push(styleObject);
 
                                     let link = document.createElement('a');
                                     link.href = '#';
                                     // We want all of these links to be off (and look off) as a default,
                                     // so we will NOT mark them with the 'active' class.
                                     link.classname = '';
-                                    link.textContent = 'provider-' + providerName;
+                                    link.textContent = providerName;
                                     // Add a click event to each toggle button to toggle the layer, also add the way
                                     // to change the button's class so that we can see if it switched on or off.
                                     link.onclick = function(e) {
-                                        console.log('this is styles???? ' + JSON.stringify(mapStyles.style))
                                             let clickedLayer = this.textContent;
                                             e.preventDefault();
                                             e.stopPropagation();
@@ -410,41 +425,11 @@
                                     let layerToggleList = document.getElementById('mapbox_component-providers-toggle');
                                     layerToggleList.appendChild(link);
 
-                                    // // Add checkbox and label elements for the layer.
-                                    // let input = document.createElement('input');
-                                    // input.type = 'checkbox';
-                                    // input.id = layerID;
-                                    // input.checked = false;
-                                    // providersToggle.appendChild(input);
-                                    //
-                                    // let label = document.createElement('label');
-                                    // label.setAttribute('for', layerID);
-                                    // label.textContent = providerName;
-                                    // providersToggle.appendChild(label);
-                                    //
-                                    // // When the checkbox changes, update the visibility of the layer.
-                                    // input.addEventListener('change', function(e) {
-                                    //     map.setLayoutProperty(layerID, 'visibility',
-                                    //             e.target.checked ? 'visible' : 'none');
-                                    // });
                                 }
                             });
-
-
-
-
-
-
-
                         }).catch(function(error) {
                     console.log('Request to gather the monitoring location data failed', error);
                 });
-
-
-
-
-
-
             }
         }
     }
