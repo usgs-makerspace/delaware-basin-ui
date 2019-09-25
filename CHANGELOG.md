@@ -2,6 +2,8 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- added data provider groupings
+- added stream orders and toggles
 - added color coding for number of observations at locations, and related legend update
 - changed the zoom level at which the monitoring locations un-cluster
 - added point clustering for monitoring locations

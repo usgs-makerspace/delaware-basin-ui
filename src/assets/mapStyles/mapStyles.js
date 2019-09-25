@@ -1083,6 +1083,24 @@ export default {
                 'inLegend' : true
             },
             {
+                'filter': ['==', 'FType', 466],
+                'id': 'NHD swamp/marsh',
+                'type': 'fill',
+                'source': 'delaware_basin_tiles',
+                'source-layer': 'nhd_hires_waterbodies',
+                'layout': {
+                    'visibility': 'visible'
+                },
+                'paint': {
+                    'fill-color': 'hsla(120, 31%, 54%, 1)'
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
+                'inLegend' : true
+            },
+            {
                 "id": "stream_order_1",
                 'type': 'line',
                 'source': 'nhd_streams',
