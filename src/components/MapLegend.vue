@@ -99,7 +99,7 @@
                     key.style.display = 'inline-block';
                     key.style.height = '10px';
                     key.style.width = '10px';
-                    key.style.borderRadius = '50%'
+                    key.style.borderRadius = '50%';
                     let value = document.createElement('span');
 
                     value.innerHTML = layer;
