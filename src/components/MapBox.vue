@@ -500,26 +500,21 @@
     min-height: 500px;
   }
 
-  @media screen and (min-width:600px){
-    #viz_container{
-      flex:1;
+  @media screen and (min-width:600px) {
+    #viz_container {
+      flex: 1;
       display: flex;
-      flex-direction:column;
+      flex-direction: column;
     }
 
-    #mapContainer{
+    #mapContainer {
       flex: 1;
       display: flex;
       flex-direction: column;
       height: auto;
     }
-    #map{
+    #map {
       flex: 1;
-    }
-
-    .font-awesome-close {
-      float: right;
-      background-color: red;
     }
   }
 
