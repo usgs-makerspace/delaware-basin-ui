@@ -7,7 +7,7 @@
         </h2>
       </div>
       <div
-        id="mapbox_component-layer-toggle"
+        id="mapbox_component-layers-toggle"
         class="mapbox_component-topnav"
       >
         <a
@@ -202,7 +202,7 @@
                         }
                     };
 
-                    let layerToggleList = document.getElementById('mapbox_component-layer-toggle');
+                    let layerToggleList = document.getElementById('mapbox_component-layers-toggle');
                     layerToggleList.appendChild(link);
                 }
 
@@ -576,19 +576,28 @@
       font-size: .8em;
       margin-left: 1rem;
     }
-    .mapbox_component-topnav a:not(:first-child) {display: none;}
+
+    .mapbox_component-topnav a:not(:first-child) {
+      display: none;
+    }
+
     .mapbox_component-topnav a.icon {
       float: right;
       display: block;
     }
-    /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the layer group icon.
+
+    /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the any of the toggle icons.
     This class makes the to layer toggle menu look good on small screens (display the links vertically instead of horizontally) */
+    .mapbox_component-topnav.responsive {
+      position: relative;
+    }
 
     .mapbox_component-topnav.responsive a.icon {
       position: absolute;
       right: 0;
       top: 0;
     }
+
     .mapbox_component-topnav.responsive a {
       float: none;
       display: block;
