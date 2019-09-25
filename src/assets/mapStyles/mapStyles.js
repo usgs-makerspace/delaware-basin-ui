@@ -1456,6 +1456,39 @@ export default {
                 'inLegend' : false
             },
             {
+                'id': 'NHD names',
+                'type': 'symbol',
+                'source': 'delaware_basin_tiles',
+                'source-layer': 'nhd_hires_waterbodies',
+                'layout': {
+                    'visibility': 'none',
+                    'text-field': '{Permanent_Identifier}  {GNIS_Name}',
+                    'text-font': [
+                        'Roboto Regular'
+                    ],
+                    'text-size': 12,
+                    'symbol-placement': 'point',
+                    'text-line-height': 1.2,
+                    'text-justify': 'center',
+                    'text-anchor': 'bottom',
+                    'text-offset': [
+                        0,
+                        -1.5
+                    ]
+                },
+                'paint': {
+                    'text-color': 'rgba(0, 0, 0, 0.5)',
+                    'text-halo-width': 1,
+                    'text-halo-blur': 1,
+                    'text-halo-color': 'rgba(255,255,255, 1)',
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
+                'inLegend' : false
+            },
+            {
                 'filter': ['all', ['==', '$type', 'Point'],
                     ['==', 'class', 'city']
                 ],

@@ -304,7 +304,12 @@
                 });
 
 
-// section starts provider filtering
+                // This section starts data provider filtering . . .
+                // We need an object to do the filtering and can't just use the data pulled in with the original
+                // call to get the monitoring location information we made in the style sheet,
+                // so I am making a second call (using the 'fetch' api) to get the GeoJson monitoring location
+                // information again. Then we pack it into a object that we can use to create a new map layer for each
+                // data provider. Then buttons are added for each of those layers.
                 let url = 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson';
                 // set up a element to contain the filter selections for monitoring locations
                 let providersToggle = document.getElementById('mapbox_component-providers-toggle');
@@ -371,6 +376,7 @@
                                 // a new map layer for it--provided that a map layer for that type does not already exist.
                                 let providerName = feature.properties['source'];
                                 let layerID = providerName;
+                                let color = 'hsl('+ hslHues[loopCount] + ', 100%, 51%)';
                                 if (!map.getLayer(layerID)) {
                                     let styleObject =
                                             {
@@ -382,11 +388,11 @@
                                                 },
                                                 'filter': ['==', 'source', providerName],
                                                 'paint': {
-                                                    'circle-color':  'hsl('+ hslHues[loopCount] + ', 100%, 51%)',
+                                                    'circle-color':  color,
                                                     'circle-opacity': 0.1,
                                                     'circle-radius': 10,
                                                     'circle-stroke-width': 2,
-                                                    'circle-stroke-color': 'hsl('+ hslHues[loopCount] + ', 100%, 51%)',
+                                                    'circle-stroke-color': color,
                                                 },
                                                 'minzoom': 3,
                                                 'maxzoom': 23,
@@ -399,11 +405,21 @@
                                     mapStyles.style.layers.push(styleObject);
 
                                     let link = document.createElement('a');
+                                    let colorKey = document.createElement('span');
+                                    colorKey.style.backgroundColor = color;
+                                    colorKey.style.marginLeft = '5px';
+                                    colorKey.style.display = 'inline-block';
+                                    colorKey.style.height = '10px';
+                                    colorKey.style.width = '10px';
+                                    colorKey.style.borderRadius = '50%';
                                     link.href = '#';
                                     // We want all of these links to be off (and look off) as a default,
                                     // so we will NOT mark them with the 'active' class.
                                     link.classname = '';
                                     link.textContent = providerName;
+                                    link.appendChild(colorKey);
+
+
                                     // Add a click event to each toggle button to toggle the layer, also add the way
                                     // to change the button's class so that we can see if it switched on or off.
                                     link.onclick = function(e) {
