@@ -11,7 +11,7 @@ export default {
                 // If you are setting up a local build, you can uncomment the following
                 // URL assignment to pull the HRU tiles from S3 so that no local tile
                 // server is required:
-                // 'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
+                'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
                 "minzoom": 3,
                 "maxzoom": 14
             },
@@ -1545,6 +1545,83 @@ export default {
                 'showButtonStreamToggle': false,
                 'inLegend' : false
             },
+
+            {
+                'id': 'NHD flowline names',
+                'type': 'symbol',
+                'source': 'delaware_basin_tiles',
+                'source-layer': 'nhd_hires_flowlines',
+                'layout': {
+                    'visibility': 'none',
+                    'text-field': 'PID {Permanent_Identifier}',
+                    'text-font': [
+                        'Roboto Regular'
+                    ],
+                    'text-size': 12,
+                    'symbol-placement': 'point',
+                    'text-line-height': 1.2,
+                    'text-justify': 'center',
+                    'text-anchor': 'bottom',
+                    'text-offset': [
+                        0,
+                        -1.5
+                    ]
+                },
+                'paint': {
+                    'text-color': 'rgba(235, 225, 52, 1)',
+                    'text-halo-width': 1,
+                    'text-halo-blur': 1,
+                    'text-halo-color': 'rgba(255,255,255, 1)',
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
+                'inLegend' : false
+            },
+
+            {
+                'id': 'PRMS river names',
+                'type': 'symbol',
+                'source': 'delaware_basin_tiles',
+                'source-layer': 'delaware_PRMS_streams',
+                'layout': {
+                    'visibility': 'none',
+                    'text-field': 'seg_id {seg_id_nat}',
+                    'text-font': [
+                        'Roboto Regular'
+                    ],
+                    'text-size': 12,
+                    'symbol-placement': 'point',
+                    'text-line-height': 1.2,
+                    'text-justify': 'center',
+                    'text-anchor': 'bottom',
+                    'text-offset': [
+                        0,
+                        -1.5
+                    ]
+                },
+                'paint': {
+                    'text-color': 'rgba(107, 52, 235, 1)',
+                    'text-halo-width': 1,
+                    'text-halo-blur': 1,
+                    'text-halo-color': 'rgba(255,255,255, 1)',
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
+                'inLegend' : false
+            },
+
+
+
+
+
+
+
+
+
             {
                 'filter': ['all', ['==', '$type', 'Point'],
                     ['==', 'class', 'city']
