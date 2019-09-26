@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- changed to use Tile server url
 - added click on monitoring location to add show location info on information bar
 - added hru hover that displays name in the information bar
 - added layer style for swamps and marshes 
