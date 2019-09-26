@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- changed to use Tile server url
+- added click on monitoring location to add show location info on information bar
+- added hru hover that displays name in the information bar
+- added layer style for swamps and marshes 
 - added data provider groupings
 - added stream orders and toggles
 - added color coding for number of observations at locations, and related legend update

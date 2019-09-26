@@ -52,6 +52,9 @@
         </a>
       </div>
     </div>
+    <div id="infoContainer" class="info-container">
+      <p>| <span id="infoForSelectedItemContent"></span></p>
+    </div>
     <div id="mapContainer">
       <MapLegend :legend-title="legendTitle" />
       <MglMap
@@ -145,6 +148,8 @@
             },
             onMapLoaded(event) {
                 let map = event.map; // This gives us access to the map as an object but only after the map has loaded
+                let infoForSelectedItemTitle = document.getElementById('infoForSelectedItemTitle');
+                let infoForSelectedItemContent = document.getElementById('infoForSelectedItemContent');
 
 
                 // For now, I am going to duplicate this code section for each set of toggles (currently layers and streams), ideally this would be
@@ -264,17 +269,22 @@
 
                 // next section controls the HRU hover effect
                 let hoveredHRUId = this.hoveredHRUId;
-                map.on("mousemove", "hydrological unit - highlight", function(e) {
+                map.on("mousemove", "hru - highlight", function(e) {
                     if (e.features.length > 0) {
                         if (hoveredHRUId) {
+                            infoForSelectedItemTitle.textContent = 'Hydrological Response Unit ';
+                            infoForSelectedItemContent.textContent = e.features[0].id;
                             map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: false});
                         }
                         hoveredHRUId = e.features[0].id;
+
                         map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: true});
                     }
                 });
-                map.on("mouseleave", "HRUS Fill Colors", function () {
+                map.on("mouseleave", "hru - highlight", function () {
                     if (hoveredHRUId) {
+                        infoForSelectedItemTitle.textContent = '';
+                        infoForSelectedItemContent.textContent = '';
                         map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: false});
                     }
                     hoveredHRUId = null;
@@ -303,6 +313,49 @@
                     map.getCanvas().style.cursor = '';
                 });
 
+                // Create an information banner when the user clicks on a monitoring location
+                map.on('click', 'monitoring-location-unclustered-point', function (e) {
+                    infoForSelectedItemContent.textContent = '';
+                    let properties = e.features[0].properties;
+                    for (let [key, value] of Object.entries(properties)) {
+                        // Clean up the wording of some of the known keys so that they look better on the page
+                        switch (key) {
+                            case 'site_id':
+                                key = 'site id';
+                                break;
+                            case 'nobsBin':
+                                key = '';
+                                break;
+                            case 'n_obs':
+                                key = 'observations';
+                                break;
+                            case 'dist_to_reach_km':
+                                key = 'distance to reach (km)';
+                                break;
+                            case 'matched_reach_id':
+                                key = 'matched reach id';
+                                break;
+                            default:
+                                // If key doesn't match a known value, just leave it like it is and print it out.
+                        }
+
+                        if (key !== '' && value !== '') {
+                            infoForSelectedItemContent.textContent += key + ': ' + value + ' | ';
+                        }
+                    }
+                });
+
+                // Change the cursor to a pointer when the mouse is over the layer containing monitoring locations.
+                map.on('mouseenter', 'monitoring-location-unclustered-point', function () {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+
+                // Change it back to a pointer when it leaves the layer containing monitoring locations.
+                map.on('mouseleave', 'monitoring-location-unclustered-point', function () {
+                    map.getCanvas().style.cursor = '';
+                });
+
+
 
                 // This section starts data provider filtering . . .
                 // We need an object to do the filtering and can't just use the data pulled in with the original
@@ -313,6 +366,8 @@
                 let url = 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson';
                 // set up a element to contain the filter selections for monitoring locations
                 let providersToggle = document.getElementById('mapbox_component-providers-toggle');
+
+                // Create a function to handle the 'response' returned from the 'fetch' command
                 function status(response) {
                     if (response.status >= 200 && response.status < 300) {
                         return Promise.resolve(response)
@@ -321,6 +376,7 @@
                     }
                 }
 
+                // If the 'fetch' returned a valid response, turn it into JSON
                 function json(response) {
                     return response.json()
                 }
@@ -420,7 +476,7 @@
                                     link.appendChild(colorKey);
 
 
-                                    // Add a click event to each toggle button to toggle the layer, also add the way
+                                    // Add a click event to each toggle button to toggle the layer, also add a way
                                     // to change the button's class so that we can see if it switched on or off.
                                     link.onclick = function(e) {
                                             let clickedLayer = this.textContent;
@@ -484,8 +540,14 @@
     color: #fff;
   }
 
+
   .usa-prose {
     border-bottom: 1px solid rgb(100,100,100);
+  }
+
+  .info-container p {
+    font-family: 'Source Sans Pro', sans-serif;
+    margin: 0;
   }
 
   /* override USWDS style to prevent title from wrapping too soon */

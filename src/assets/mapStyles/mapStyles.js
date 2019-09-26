@@ -11,7 +11,7 @@ export default {
                 // If you are setting up a local build, you can uncomment the following
                 // URL assignment to pull the HRU tiles from S3 so that no local tile
                 // server is required:
-                'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
+                // 'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
                 "minzoom": 3,
                 "maxzoom": 14
             },
@@ -36,11 +36,11 @@ export default {
                 type: 'vector',
                 'tiles': ['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
                 "minzoom": 3,
-                "maxzoom": 14
+                "maxzoom": 10
             },
             openmaptiles: {
                 type: 'vector',
-                'tiles': ['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/openmaptiles/{z}/{x}/{y}.pbf'],
+                'tiles': ['https://maptiles-prod-website.s3-us-west-2.amazonaws.com/openmaptiles/baselayers/{z}/{x}/{y}.pbf'],
                 "minzoom": 3,
                 "maxzoom": 14
             },
@@ -1302,7 +1302,7 @@ export default {
                 'inLegend' : true
             },
             {
-                'id': 'hydrological unit - highlight',
+                'id': 'hru - highlight',
                 'type': 'fill',
                 'source': 'HRU',
                 'source-layer': 'hrus',
@@ -1315,7 +1315,8 @@ export default {
                         ['boolean', ['feature-state', 'hover'], false],
                         0.5,
                         0
-                    ]
+                    ],
+                    'fill-outline-color': 'red'
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
@@ -1324,7 +1325,45 @@ export default {
                 'inLegend' : false
             },
             {
-                'id': 'hydrological unit - outlines',
+                'id': 'hru names',
+                'type': 'symbol',
+                'source': 'HRU',
+                'source-layer': 'hrus',
+                'layout': {
+                    'visibility': 'none',
+                    'text-field': 'HRU - {hru_id_nat}',
+                    'text-font': [
+                        'Roboto Regular'
+                    ],
+                    'text-size': 12,
+                    'symbol-placement': 'point',
+                    'text-line-height': 1.2,
+                    'text-justify': 'center',
+                    'text-anchor': 'center',
+                    'text-offset': [
+                        0,
+                        -1.5
+                    ]
+                },
+                'paint': {
+                    'text-color': 'rgba(0, 0, 0, 0.5)',
+                    'text-halo-width': 1,
+                    'text-halo-blur': 1,
+                    'text-halo-color': 'rgba(255,255,255, 1)',
+                    'text-opacity': ['case',
+                        ['boolean', ['feature-state', 'hover'], false],
+                        0,
+                        1
+                    ],
+                },
+                'minzoom': 3,
+                'maxzoom': 23,
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
+                'inLegend' : false
+            },
+            {
+                'id': 'hru - outlines',
                 'type': 'line',
                 'source': 'HRU',
                 'source-layer': 'hrus',
@@ -1455,7 +1494,7 @@ export default {
                     'symbol-placement': 'point',
                     'text-line-height': 1.2,
                     'text-justify': 'center',
-                    'text-anchor': 'bottom',
+                    'text-anchor': 'center',
                     'text-offset': [
                         0,
                         -1.5
