@@ -12,10 +12,11 @@
       >
         <a
           id="map-layers-label"
-          href="#"
+          href="JavaScript:Void(0);"
           class="active"
         >Map Layers</a>
         <a
+          href="JavaScript:Void(0);"
           class="icon"
           @click="changeToResponsiveElement('mapbox_component-layers-toggle')"
         ><font-awesome-icon icon="layer-group" />
@@ -27,7 +28,7 @@
       >
         <a
           id="map-streams-label"
-          href="#"
+          href="JavaScript:Void(0);"
           class="active"
         >Stream Orders</a>
         <a
@@ -42,7 +43,7 @@
       >
         <a
           id="map-providers-label"
-          href="#"
+          href="JavaScript:Void(0);"
           class="active"
         >Data Providers</a>
         <a
@@ -51,9 +52,27 @@
         ><font-awesome-icon icon="hand-holding-heart" />
         </a>
       </div>
+      <div
+        id="mapbox_component-project-specific-toggle"
+        class="mapbox_component-topnav"
+      >
+        <a
+          id="map-project-specific-label"
+          href="JavaScript:Void(0);"
+          class="active"
+        >Project Specific</a>
+        <a
+          class="icon"
+          @click="changeToResponsiveElement('mapbox_component-project-specific-toggle')"
+        ><font-awesome-icon icon="microscope" />
+        </a>
+      </div>
     </div>
-    <div id="infoContainer" class="info-container">
-      <p>| <span id="infoForSelectedItemContent"></span></p>
+    <div
+      id="infoContainer"
+      class="info-container"
+    >
+      <p>| <span id="infoForSelectedItemContent" /></p>
     </div>
     <div id="mapContainer">
       <MapLegend :legend-title="legendTitle" />
@@ -89,6 +108,12 @@
           position="top-right"
         />
       </MglMap>
+    </div>
+    <!--    If  you would like to see a current zoom level while doing development un-comment the following section,  -->
+    <!--    and the ZOOM LEVEL code section. Hint, search for 'ZOOM LEVEL' to find the needed code section. -->
+    <div>
+      Current Zoom Level (listed for development purposes):
+      <span id="zoomlevel" />
     </div>
   </div>
 </template>
@@ -148,9 +173,9 @@
             },
             onMapLoaded(event) {
                 let map = event.map; // This gives us access to the map as an object but only after the map has loaded
-                let infoForSelectedItemTitle = document.getElementById('infoForSelectedItemTitle');
+                // Get the element that will hold text information about a selected map element, such as a monitoring location.
+                // We will use this later for several different map elements.
                 let infoForSelectedItemContent = document.getElementById('infoForSelectedItemContent');
-
 
                 // For now, I am going to duplicate this code section for each set of toggles (currently layers and streams), ideally this would be
                 // in separate components, but for prototyping purposes this is fine for now.
@@ -265,6 +290,62 @@
                     let streamsToggleList = document.getElementById('mapbox_component-streams-toggle');
                     streamsToggleList.appendChild(link);
                 }
+
+                // Next section gives us names for the project specific toggle buttons
+                let toggleableProjectSpecificIds = [];
+                let ProjectSpecificTurnedOffAtStart = [];
+
+                for (let index = 0; index < styleLayers.length; index++) {
+                    if (styleLayers[index].showButtonProjectSpecific === true) { // note: to NOT show a button for layer, change the 'showButtonStreamToggle' property in the mapStyles.js to false
+                        toggleableProjectSpecificIds.push(styleLayers[index].id);
+
+                        // Make a list if ids of any layers that we do not want to show when the page loads (layers that are toggleable but are off by default)
+                        // These layers that are off by default have a visibility of 'none' in the style sheet.
+                        if (styleLayers[index].layout.visibility === 'none') {
+                            ProjectSpecificTurnedOffAtStart.push(styleLayers[index].id);
+                        }
+                    }
+                }
+
+                // Go through each id that is in the array and make a button element for it
+                for (let i = 0; i < toggleableProjectSpecificIds.length; i++) {
+                    let id = toggleableProjectSpecificIds[i];
+
+                    let link = document.createElement('a');
+                    link.href = '#';
+                    // If the layer is not set to visible when first loaded, then do not mark it as active.
+                    // In other words, if the layer is not visible on page load, make the button look like the layer is toggled off
+                    if (ProjectSpecificTurnedOffAtStart.includes(id)) {
+                        link.className = '';
+                    } else {
+                        link.className = 'active';
+                    }
+
+                    // Set the wording (label) for the streams toggle button to match the 'id' listed in the style sheet
+                    link.textContent = id;
+
+                    // Creates a click event for each button so that when clicked by the user, the visibility property
+                    // is changed as is the class (color) of the button
+                    link.onclick = function (e) {
+                        let clickedLayer = this.textContent;
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        let visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                        if (visibility === 'visible') {
+                            map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                            this.className = '';
+                        } else {
+                            this.className = 'active';
+                            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                        }
+                    };
+
+                    let projectSpecificToggleList = document.getElementById('mapbox_component-project-specific-toggle');
+                    projectSpecificToggleList.appendChild(link);
+                }
+
 
 
                 // next section controls the HRU hover effect
@@ -502,6 +583,15 @@
                         }).catch(function(error) {
                     console.log('Request to gather the monitoring location data failed', error);
                 });
+
+                // To see the current ZOOM LEVEL of the map during development, uncomment the next section.
+                // This section adds a indicator so that we can see the current zoom level
+                // This is for development and should be removed before sending to production
+                function onZoomend() {
+                    let currentZoom = map.getZoom();
+                    document.getElementById("zoomlevel").innerHTML = currentZoom;
+                }
+                map.on("zoomend", onZoomend);
             }
         }
     }
@@ -534,6 +624,13 @@
   }
 
   #map-providers-label::after {
+    content: "|";
+    padding-left: 10px;
+    float: right;
+    color: #fff;
+  }
+
+  #map-project-specific-label::after {
     content: "|";
     padding-left: 10px;
     float: right;

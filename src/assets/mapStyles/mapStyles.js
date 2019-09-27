@@ -11,32 +11,32 @@ export default {
                 // If you are setting up a local build, you can uncomment the following
                 // URL assignment to pull the HRU tiles from S3 so that no local tile
                 // server is required:
-                // 'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
+                'tiles': ['https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
                 "minzoom": 3,
                 "maxzoom": 14
             },
             monitoring_location_summary: {
                 type: 'geojson',
-                data: 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson',
+                data: 'http://maptiles-prod-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson',
                 cluster: true,
                 clusterMaxZoom: 8,
                 clusterRadius: 50
             },
             states: {
                 type: 'geojson',
-                data: 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/states_500k.geojson'
+                data: 'http://maptiles-prod-website.s3-us-west-2.amazonaws.com/geojson/states_500k.geojson'
             },
             nhd_streams: {
                 type: 'vector',
-                'tiles':['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/nhd_order_tiles/{z}/{x}/{y}.pbf'],
+                'tiles':['http://maptiles-prod-website.s3-us-west-2.amazonaws.com/nhdstreams/{z}/{x}/{y}.pbf'],
                 "minzoom": 3, // setting this to equal the minzoom of main map, real tile extent is 0
                 "maxzoom": 10  // setting this to equal real tile extent of 10 so that we can use Mapbox gl to over zoom
             },
             HRU: {
                 type: 'vector',
-                'tiles': ['http://wbeep-test-website.s3-website-us-west-2.amazonaws.com/tiles/{z}/{x}/{y}.pbf'],
+                'tiles': ['https://maptiles-prod-website.s3-us-west-2.amazonaws.com/hru/{z}/{x}/{y}.pbf'],
                 "minzoom": 3,
-                "maxzoom": 10
+                "maxzoom": 14
             },
             openmaptiles: {
                 type: 'vector',
@@ -44,6 +44,13 @@ export default {
                 "minzoom": 3,
                 "maxzoom": 14
             },
+            hillshade: {
+                type: 'raster',
+                'tiles': ['https://maptiles-prod-website.s3-us-west-2.amazonaws.com/openmaptiles/omthillshade/{z}/{x}/{y}.png'],
+                "minzoom": 2,
+                "maxzoom": 12,
+                "tileSize": 256
+            }
         },
         'sprite': '',
         'glyphs': 'https://orangemug.github.io/font-glyphs/glyphs/{fontstack}/{range}.pbf',
@@ -54,8 +61,9 @@ export default {
                     "background-color": "hsl(47, 26%, 93%)"
                 },
                 "type": "background",
-                'showButtonLayerToggleLayerToggle': false,
+                'showButtonLayerToggle': false,
                 'showButtonLayerToggleStreamToggle': false,
+                'showButtonProjectSpecific': false,
                 'inLegend': false                
             },
             {
@@ -77,7 +85,8 @@ export default {
                 'type': 'fill',
                 'showButtonLayerToggle': false,
                 'showButtonLayerToggleStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': false,
+                'inLegend': true
             },
             {
                 'filter': ['==', 'class', 'grass'],
@@ -93,7 +102,8 @@ export default {
                 'type': 'fill',
                 'showButtonLayerToggle': false,
                 'showButtonLayerToggleStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': false,
+                'inLegend': true
             },
             {
                 'filter': ['==', 'class', 'wood'],
@@ -115,7 +125,8 @@ export default {
                 'type': 'fill',
                 'showButtonLayerToggle': false,
                 'showButtonLayerToggleStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': false,
+                'inLegend': true
             },
             {
                 'filter': ['all', ['in', 'class', 'sand']],
@@ -133,7 +144,8 @@ export default {
                 'type': 'fill',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': false,
+                'inLegend': true
             },
             {
                 'filter': ['==', 'class', 'agriculture'],
@@ -151,7 +163,8 @@ export default {
                 'type': 'fill',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['==', 'class', 'national_park'],
@@ -173,7 +186,22 @@ export default {
                 'type': 'fill',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': false,
+                'inLegend': true
+            },
+            {
+                'id': 'hill shade',
+                'type': 'raster',
+                'minzoom': 3,
+                'maxzoom': 23,
+                'source': 'hillshade',
+                'layout': {
+                    'visibility': 'visible'
+                },
+                'showButtonLayerToggle': true,
+                'showButtonStreamToggle': false,
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -208,7 +236,8 @@ export default {
                 },
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -237,7 +266,8 @@ export default {
                 },
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -267,7 +297,8 @@ export default {
                 },
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -297,7 +328,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'id': 'building',
@@ -325,7 +357,8 @@ export default {
                 'type': 'fill',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['==', '$type', 'Point'],
@@ -345,7 +378,8 @@ export default {
                 'type': 'symbol',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'id': 'road_area_pier',
@@ -367,7 +401,8 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'id': 'road_pier',
@@ -396,7 +431,8 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'Polygon'],
@@ -415,7 +451,8 @@ export default {
                 'type': 'fill',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -444,7 +481,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -472,7 +510,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -502,7 +541,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -532,7 +572,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'Polygon'],
@@ -562,7 +603,8 @@ export default {
                 'type': 'fill',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['in', 'class', 'taxiway'],
@@ -595,7 +637,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['in', 'class', 'runway'],
@@ -628,7 +671,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -656,7 +700,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -684,7 +729,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -713,7 +759,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': false,
+                'inLegend': true
             },
             {
                 'filter': ['all', ['==', 'class', 'transit'],
@@ -740,7 +787,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['==', 'class', 'rail'],
@@ -765,7 +813,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -800,7 +849,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -828,7 +878,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -864,7 +915,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -900,7 +952,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -929,7 +982,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'LineString'],
@@ -958,7 +1012,8 @@ export default {
                 'type': 'line',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
 
             {
@@ -989,7 +1044,8 @@ export default {
                 'type': 'symbol',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['==', '$type', 'LineString'],
@@ -1021,7 +1077,8 @@ export default {
                 'type': 'symbol',
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'filter': ['all', ['==', '$type', 'Polygon'],
@@ -1041,7 +1098,8 @@ export default {
                 },
                 'showButtonLayerToggle': true,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': false,
+                'inLegend': true
             },
 
             {
@@ -1063,7 +1121,8 @@ export default {
                 },
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'id': 'NHD water bodies',
@@ -1078,9 +1137,10 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': true,
+                'inLegend': true
             },
             {
                 'filter': ['==', 'FType', 466],
@@ -1096,12 +1156,13 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': true,
+                'inLegend': true
             },
             {
-                "id": "stream_order_1",
+                "id": "order 1",
                 'type': 'line',
                 'source': 'nhd_streams',
                 'source-layer': 'nhdplus_order_1',
@@ -1115,10 +1176,11 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': true,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
-                "id": "stream_order_2",
+                "id": "order 2",
                 'type': 'line',
                 'source': 'nhd_streams',
                 'source-layer': 'nhdplus_order_2',
@@ -1132,10 +1194,11 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': true,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
-                "id": "stream_order_3",
+                "id": "order 3",
                 'type': 'line',
                 'source': 'nhd_streams',
                 'source-layer': 'nhdplus_order_3',
@@ -1149,10 +1212,11 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': true,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
-                "id": "stream_order_4",
+                "id": "order 4",
                 'type': 'line',
                 'source': 'nhd_streams',
                 'source-layer': 'nhdplus_order_4',
@@ -1166,10 +1230,11 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': true,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
-                "id": "stream_order_5",
+                "id": "order 5",
                 'type': 'line',
                 'source': 'nhd_streams',
                 'source-layer': 'nhdplus_order_5',
@@ -1183,10 +1248,11 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': true,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
-                "id": "stream_order_6",
+                "id": "order 6",
                 'type': 'line',
                 'source': 'nhd_streams',
                 'source-layer': 'nhdplus_order_6',
@@ -1199,10 +1265,12 @@ export default {
                 'minzoom': 3,
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
-                'showButtonStreamToggle': true
+                'showButtonStreamToggle': true,
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
-                "id": "stream_order_7",
+                "id": "order 7",
                 'type': 'line',
                 'source': 'nhd_streams',
                 'source-layer': 'nhdplus_order_7',
@@ -1216,10 +1284,11 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': true,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
-                "id": "stream_order_8",
+                "id": "order 8",
                 'type': 'line',
                 'source': 'nhd_streams',
                 'source-layer': 'nhdplus_order_8',
@@ -1233,10 +1302,11 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': true,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
-                "id": "stream_order_9",
+                "id": "order 9",
                 'type': 'line',
                 'source': 'nhd_streams',
                 'source-layer': 'nhdplus_order_9',
@@ -1250,10 +1320,11 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': true,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
-                "id": "stream_order_minus_9",
+                "id": "order minus_9",
                 'type': 'line',
                 'source': 'nhd_streams',
                 'source-layer': '#5F00BF',
@@ -1267,7 +1338,8 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': true,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'id': 'NHD flow lines',
@@ -1280,9 +1352,10 @@ export default {
                 'paint': {
                     'line-color': 'orange'
                 },
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': true,
+                'inLegend': true
             },
             {
                 'id': ' PRMS rivers',
@@ -1297,9 +1370,10 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': true,
+                'inLegend': true
             },
             {
                 'id': 'hru - highlight',
@@ -1320,9 +1394,10 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': true,
+                'inLegend': false
             },
             {
                 'id': 'hru names',
@@ -1358,9 +1433,10 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': true,
+                'inLegend': false
             },
             {
                 'id': 'hru - outlines',
@@ -1375,9 +1451,10 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': true,
+                'inLegend': true
             },
             {
                 'id': 'state boundaries',
@@ -1391,9 +1468,10 @@ export default {
                 'maxzoom': 23,
                 'source': 'states',
                 'type': 'line',
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': false,
+                'inLegend': true
             },
             {
                 'id': 'monitoring-location-clusters',
@@ -1423,7 +1501,8 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'id': 'monitoring-location-cluster-count',
@@ -1449,7 +1528,8 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': false,
+                'inLegend': false
             },
             {
                 'id': 'monitoring-location-unclustered-point',
@@ -1478,7 +1558,8 @@ export default {
                 'maxzoom': 23,
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : true
+                'showButtonProjectSpecific': false,
+                'inLegend': true
             },
             {
                 'id': 'site names',
@@ -1508,9 +1589,10 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': true,
+                'inLegend': false
             },
             {
                 'id': 'NHD names',
@@ -1541,13 +1623,14 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': true,
+                'inLegend': false
             },
 
             {
-                'id': 'NHD flowline names',
+                'id': 'NHD Permanent_Identifier',
                 'type': 'symbol',
                 'source': 'delaware_basin_tiles',
                 'source-layer': 'nhd_hires_flowlines',
@@ -1568,16 +1651,17 @@ export default {
                     ]
                 },
                 'paint': {
-                    'text-color': 'rgba(235, 225, 52, 1)',
+                    'text-color': 'rgba(52, 128, 235, 1)',
                     'text-halo-width': 1,
                     'text-halo-blur': 1,
                     'text-halo-color': 'rgba(255,255,255, 1)',
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': true,
+                'inLegend': false
             },
 
             {
@@ -1609,9 +1693,10 @@ export default {
                 },
                 'minzoom': 3,
                 'maxzoom': 23,
-                'showButtonLayerToggle': true,
+                'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'showButtonProjectSpecific': true,
+                'inLegend': false
             },
 
 
@@ -1651,7 +1736,7 @@ export default {
                 'type': 'symbol',
                 'showButtonLayerToggle': true,
                 'showButtonStreamToggle': false,
-                'inLegend' : false
+                'inLegend': false
             }
         ]
     }
