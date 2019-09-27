@@ -184,6 +184,10 @@
                 let styleLayers = Object.values(mapStyles.style.layers); // Pulls the layers out of the styles object as an array
                 let toggleableLayerIds = [];
                 let layersTurnedOffAtStart = [];
+                let toggleableStreamsIds = [];
+                let streamsTurnedOffAtStart = [];
+                let toggleableProjectSpecificIds = [];
+                let ProjectSpecificTurnedOffAtStart = [];
 
                 for (let index = 0; index < styleLayers.length; index++) {
                     if (styleLayers[index].showButtonLayerToggle === true) { // note: to NOT show a button for layer, change the 'showButtonLayerToggle' property in the mapStyles.js to false
@@ -237,8 +241,7 @@
                 }
 
                 // Next section gives us names for the streams toggle buttons
-                let toggleableStreamsIds = [];
-                let streamsTurnedOffAtStart = [];
+
 
                 for (let index = 0; index < styleLayers.length; index++) {
                     if (styleLayers[index].showButtonStreamToggle === true) { // note: to NOT show a button for layer, change the 'showButtonStreamToggle' property in the mapStyles.js to false
@@ -292,8 +295,7 @@
                 }
 
                 // Next section gives us names for the project specific toggle buttons
-                let toggleableProjectSpecificIds = [];
-                let ProjectSpecificTurnedOffAtStart = [];
+
 
                 for (let index = 0; index < styleLayers.length; index++) {
                     if (styleLayers[index].showButtonProjectSpecific === true) { // note: to NOT show a button for layer, change the 'showButtonStreamToggle' property in the mapStyles.js to false
