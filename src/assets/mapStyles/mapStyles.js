@@ -1350,7 +1350,18 @@ export default {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'line-color': 'orange'
+                    'line-color': ['case',
+                        ['boolean', ['feature-state', 'hover'], false],
+                        'pink', // this is here for the hover, but we need to change the data set to get it to work
+                        'orange'
+                    ],
+                    'line-width': {
+                        'base': 1,
+                        'stops': [
+                            [6, 0],
+                            [10, 2]
+                        ]
+                    }
                 },
                 'showButtonLayerToggle': false,
                 'showButtonStreamToggle': false,
@@ -1366,7 +1377,14 @@ export default {
                     'visibility': 'visible'
                 },
                 'paint': {
-                    'line-color': 'red'
+                    'line-color': 'red',
+                    'line-width': {
+                        'base': 1,
+                        'stops': [
+                            [6, 0],
+                            [10, 2]
+                        ]
+                    }
                 },
                 'minzoom': 3,
                 'maxzoom': 23,

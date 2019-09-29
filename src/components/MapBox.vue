@@ -72,7 +72,7 @@
       id="infoContainer"
       class="info-container"
     >
-      <p>| <span id="infoForSelectedItemContent" /></p>
+      <p>| <span id="infoForSelectedItem" /></p>
     </div>
     <div id="mapContainer">
       <MapLegend :legend-title="legendTitle" />
@@ -156,8 +156,9 @@
                 pitch: 0, // tips the map from 0 to 60 degrees
                 bearing: 0, // starting rotation of the map from 0 to 360
                 hoveredHRUId: null,
-                legendTitle: 'Legend',
-                coordinates: null
+                hoveredNHDFlowLineId: null,
+                hoveredPRMSId: null,
+                legendTitle: 'Legend'
             }
         },
         methods: {
@@ -173,21 +174,23 @@
             },
             onMapLoaded(event) {
                 let map = event.map; // This gives us access to the map as an object but only after the map has loaded
+
                 // Get the element that will hold text information about a selected map element, such as a monitoring location.
                 // We will use this later for several different map elements.
-                let infoForSelectedItemContent = document.getElementById('infoForSelectedItemContent');
-
-                // For now, I am going to duplicate this code section for each set of toggles (currently layers and streams), ideally this would be
-                // in separate components, but for prototyping purposes this is fine for now.
+                let infoForSelectedItem = document.getElementById('infoForSelectedItem');
 
                 // Next section gives us names for the layer toggle buttons
                 let styleLayers = Object.values(mapStyles.style.layers); // Pulls the layers out of the styles object as an array
+
                 let toggleableLayerIds = [];
                 let layersTurnedOffAtStart = [];
                 let toggleableStreamsIds = [];
                 let streamsTurnedOffAtStart = [];
                 let toggleableProjectSpecificIds = [];
                 let ProjectSpecificTurnedOffAtStart = [];
+
+                let assembledIdSets = [];
+                let assembledOffAtStartSets = [];
 
                 for (let index = 0; index < styleLayers.length; index++) {
                     if (styleLayers[index].showButtonLayerToggle === true) { // note: to NOT show a button for layer, change the 'showButtonLayerToggle' property in the mapStyles.js to false
@@ -199,175 +202,86 @@
                             layersTurnedOffAtStart.push(styleLayers[index].id);
                         }
                     }
-                }
-
-                // Go through each layer id that is in the array and make a button element for it
-                for (let i = 0; i < toggleableLayerIds.length; i++) {
-                    let id = toggleableLayerIds[i];
-
-                    let link = document.createElement('a');
-                    link.href = '#';
-                    // If the layer is not set to visible when first loaded, then do not mark it as active.
-                    // In other words, if the layer is not visible on page load, make the button look like the layer is toggled off
-                    if (layersTurnedOffAtStart.includes(id)) {
-                        link.className = '';
-                    } else {
-                        link.className = 'active';
-                    }
-
-                    // Set the wording (label) for the layer toggle button to match the 'id' listed in the style sheet
-                    link.textContent = id;
-
-                    // Creates a click event for each button so that when clicked by the user, the visibility property
-                    // is changed as is the class (color) of the button
-                    link.onclick = function (e) {
-                        let clickedLayer = this.textContent;
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        let visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-
-                        if (visibility === 'visible') {
-                            map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                            this.className = '';
-                        } else {
-                            this.className = 'active';
-                            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-                        }
-                    };
-
-                    let layerToggleList = document.getElementById('mapbox_component-layers-toggle');
-                    layerToggleList.appendChild(link);
-                }
-
-                // Next section gives us names for the streams toggle buttons
-
-
-                for (let index = 0; index < styleLayers.length; index++) {
-                    if (styleLayers[index].showButtonStreamToggle === true) { // note: to NOT show a button for layer, change the 'showButtonStreamToggle' property in the mapStyles.js to false
+                    if (styleLayers[index].showButtonStreamToggle === true) {
                         toggleableStreamsIds.push(styleLayers[index].id);
-
-                        // Make a list if ids of any layers that we do not want to show when the page loads (layers that are toggleable but are off by default)
-                        // These layers that are off by default have a visibility of 'none' in the style sheet.
                         if (styleLayers[index].layout.visibility === 'none') {
                             streamsTurnedOffAtStart.push(styleLayers[index].id);
                         }
                     }
-                }
-
-                // Go through each streams id that is in the array and make a button element for it
-                for (let i = 0; i < toggleableStreamsIds.length; i++) {
-                    let id = toggleableStreamsIds[i];
-
-                    let link = document.createElement('a');
-                    link.href = '#';
-                    // If the layer is not set to visible when first loaded, then do not mark it as active.
-                    // In other words, if the layer is not visible on page load, make the button look like the layer is toggled off
-                    if (streamsTurnedOffAtStart.includes(id)) {
-                        link.className = '';
-                    } else {
-                        link.className = 'active';
-                    }
-
-                    // Set the wording (label) for the streams toggle button to match the 'id' listed in the style sheet
-                    link.textContent = id;
-
-                    // Creates a click event for each button so that when clicked by the user, the visibility property
-                    // is changed as is the class (color) of the button
-                    link.onclick = function (e) {
-                        let clickedLayer = this.textContent;
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        let visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-
-                        if (visibility === 'visible') {
-                            map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                            this.className = '';
-                        } else {
-                            this.className = 'active';
-                            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
-                        }
-                    };
-
-                    let streamsToggleList = document.getElementById('mapbox_component-streams-toggle');
-                    streamsToggleList.appendChild(link);
-                }
-
-                // Next section gives us names for the project specific toggle buttons
-
-
-                for (let index = 0; index < styleLayers.length; index++) {
-                    if (styleLayers[index].showButtonProjectSpecific === true) { // note: to NOT show a button for layer, change the 'showButtonStreamToggle' property in the mapStyles.js to false
+                    if (styleLayers[index].showButtonProjectSpecific === true) {
                         toggleableProjectSpecificIds.push(styleLayers[index].id);
-
-                        // Make a list if ids of any layers that we do not want to show when the page loads (layers that are toggleable but are off by default)
-                        // These layers that are off by default have a visibility of 'none' in the style sheet.
                         if (styleLayers[index].layout.visibility === 'none') {
                             ProjectSpecificTurnedOffAtStart.push(styleLayers[index].id);
                         }
                     }
                 }
+                assembledIdSets.push(toggleableLayerIds);
+                assembledIdSets.push(toggleableStreamsIds);
+                assembledIdSets.push(toggleableProjectSpecificIds);
 
-                // Go through each id that is in the array and make a button element for it
-                for (let i = 0; i < toggleableProjectSpecificIds.length; i++) {
-                    let id = toggleableProjectSpecificIds[i];
+                assembledOffAtStartSets.push(layersTurnedOffAtStart);
+                assembledOffAtStartSets.push(streamsTurnedOffAtStart);
+                assembledOffAtStartSets.push(ProjectSpecificTurnedOffAtStart);
 
-                    let link = document.createElement('a');
-                    link.href = '#';
-                    // If the layer is not set to visible when first loaded, then do not mark it as active.
-                    // In other words, if the layer is not visible on page load, make the button look like the layer is toggled off
-                    if (ProjectSpecificTurnedOffAtStart.includes(id)) {
-                        link.className = '';
-                    } else {
-                        link.className = 'active';
-                    }
-
-                    // Set the wording (label) for the streams toggle button to match the 'id' listed in the style sheet
-                    link.textContent = id;
-
-                    // Creates a click event for each button so that when clicked by the user, the visibility property
-                    // is changed as is the class (color) of the button
-                    link.onclick = function (e) {
-                        let clickedLayer = this.textContent;
-                        e.preventDefault();
-                        e.stopPropagation();
-
-                        let visibility = map.getLayoutProperty(clickedLayer, 'visibility');
-
-                        if (visibility === 'visible') {
-                            map.setLayoutProperty(clickedLayer, 'visibility', 'none');
-                            this.className = '';
+                let elementTargets = ['mapbox_component-layers-toggle', 'mapbox_component-streams-toggle', 'mapbox_component-project-specific-toggle'];
+                let countup = 0;
+                assembledIdSets.forEach(function(idSet) {
+                    // Go through each layer id that is in the array and make a button element for it
+                    for (let index = 0; index < idSet.length; index++) {
+                        let id = idSet[index];
+                        let link = document.createElement('a');
+                        link.href = '#';
+                        // If the layer is not set to visible when first loaded, then do not mark it as active.
+                        // In other words, if the layer is not visible on page load, make the button look like the layer is toggled off
+                        if (assembledOffAtStartSets[countup].includes(id)) {
+                            link.className = '';
                         } else {
-                            this.className = 'active';
-                            map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                            link.className = 'active';
                         }
-                    };
 
-                    let projectSpecificToggleList = document.getElementById('mapbox_component-project-specific-toggle');
-                    projectSpecificToggleList.appendChild(link);
-                }
+                        // Set the wording (label) for the layer toggle button to match the 'id' listed in the style sheet
+                        link.textContent = id;
 
+                        // Creates a click event for each button so that when clicked by the user, the visibility property
+                        // is changed as is the class (color) of the button
+                        link.onclick = function (e) {
+                            let clickedLayer = this.textContent;
+                            e.preventDefault();
+                            e.stopPropagation();
 
+                            let visibility = map.getLayoutProperty(clickedLayer, 'visibility');
+
+                            if (visibility === 'visible') {
+                                map.setLayoutProperty(clickedLayer, 'visibility', 'none');
+                                this.className = '';
+                            } else {
+                                this.className = 'active';
+                                map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
+                            }
+                        };
+
+                        let layerToggleList = document.getElementById(elementTargets[countup]);
+                        layerToggleList.appendChild(link);
+                    }
+                    countup++;
+                });
 
                 // next section controls the HRU hover effect
                 let hoveredHRUId = this.hoveredHRUId;
                 map.on("mousemove", "hru - highlight", function(e) {
                     if (e.features.length > 0) {
                         if (hoveredHRUId) {
-                            infoForSelectedItemTitle.textContent = 'Hydrological Response Unit ';
-                            infoForSelectedItemContent.textContent = e.features[0].id;
+                            infoForSelectedItem.textContent = 'Hydrological Response Unit - ' + e.features[0].id;
                             map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: false});
                         }
                         hoveredHRUId = e.features[0].id;
-
+console.log('HRU ', e.features[0])
                         map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: true});
                     }
                 });
                 map.on("mouseleave", "hru - highlight", function () {
                     if (hoveredHRUId) {
-                        infoForSelectedItemTitle.textContent = '';
-                        infoForSelectedItemContent.textContent = '';
+                        infoForSelectedItem.textContent = '';
                         map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: false});
                     }
                     hoveredHRUId = null;
@@ -398,7 +312,7 @@
 
                 // Create an information banner when the user clicks on a monitoring location
                 map.on('click', 'monitoring-location-unclustered-point', function (e) {
-                    infoForSelectedItemContent.textContent = '';
+                    infoForSelectedItem.textContent = '';
                     let properties = e.features[0].properties;
                     for (let [key, value] of Object.entries(properties)) {
                         // Clean up the wording of some of the known keys so that they look better on the page
@@ -423,7 +337,7 @@
                         }
 
                         if (key !== '' && value !== '') {
-                            infoForSelectedItemContent.textContent += key + ': ' + value + ' | ';
+                            infoForSelectedItem.textContent += key + ': ' + value + ' | ';
                         }
                     }
                 });
@@ -433,11 +347,49 @@
                     map.getCanvas().style.cursor = 'pointer';
                 });
 
-                // Change it back to a pointer when it leaves the layer containing monitoring locations.
+                // Change it back to normal when it leaves the layer containing monitoring locations.
                 map.on('mouseleave', 'monitoring-location-unclustered-point', function () {
                     map.getCanvas().style.cursor = '';
                 });
 
+                // Next section creates an information banner for stream reaches (nhd flow lines)
+                map.on('click', 'NHD flow lines', function (e) {
+                    infoForSelectedItem.textContent = 'NHD flow line || ';
+                    let properties = e.features[0].properties;
+                    for (let [key, value] of Object.entries(properties)) {
+                        if (key !== '' && value !== '') {
+                            infoForSelectedItem.textContent += key + ': ' + value + ' | ';
+                        }
+                    }
+                });
+
+                // Change the cursor to a pointer when the mouse is over the layer containing flow lines.
+                map.on('mouseenter', 'NHD flow lines', function () {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                // Change it back to normal when it leaves the layer containing flow lines.
+                map.on('mouseleave', 'NHD flow lines', function () {
+                    map.getCanvas().style.cursor = '';
+                });
+
+                // Next section creates an information banner for PRMS rivers
+                map.on('click', 'PRMS rivers', function (e) {
+                    infoForSelectedItem.textContent = 'PMS River || ';
+                    let properties = e.features[0].properties;
+                    for (let [key, value] of Object.entries(properties)) {
+                        if (key !== '' && value !== '') {
+                            infoForSelectedItem.textContent += key + ': ' + value + ' | ';
+                        }
+                    }
+                });
+                // Change the cursor to a pointer when the mouse is over the layer containing PRMS rivers.
+                map.on('mouseenter', 'PRMS rivers', function () {
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                // Change it back to normal when it leaves the layer containing PRMS rivers.
+                map.on('mouseleave', 'PRMS rivers', function () {
+                    map.getCanvas().style.cursor = '';
+                });
 
 
                 // This section starts data provider filtering . . .
@@ -590,8 +542,7 @@
                 // This section adds a indicator so that we can see the current zoom level
                 // This is for development and should be removed before sending to production
                 function onZoomend() {
-                    let currentZoom = map.getZoom();
-                    document.getElementById("zoomlevel").innerHTML = currentZoom;
+                    document.getElementById("zoomlevel").innerHTML = map.getZoom();;
                 }
                 map.on("zoomend", onZoomend);
             }
@@ -658,7 +609,6 @@
   #mapContainer{
     position: relative;
     height:80vh;
-    min-height: 500px;
   }
 
   @media screen and (min-width:600px) {
@@ -676,6 +626,7 @@
     }
     #map {
       flex: 1;
+      min-height: 70vh;
     }
   }
 
