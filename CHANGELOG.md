@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Legend toggle functionality
 - divided buttons on bars
 - added hill shade
 - changed to use Tile server url

@@ -9,6 +9,8 @@ import { faHandHoldingHeart } from '@fortawesome/free-solid-svg-icons'
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons'
 import { faMicroscope} from '@fortawesome/free-solid-svg-icons';
 import { faWater } from '@fortawesome/free-solid-svg-icons'
+import { faMinus } from '@fortawesome/free-solid-svg-icons'
+import { faPlus } from '@fortawesome/free-solid-svg-icons'
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -16,6 +18,8 @@ library.add(faHandHoldingHeart)
 library.add(faLayerGroup)
 library.add(faMicroscope)
 library.add(faWater)
+library.add(faMinus)
+library.add(faPlus)
 
 Vue.config.productionTip = false
 Vue.use(uswds)
