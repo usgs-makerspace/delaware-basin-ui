@@ -29,8 +29,8 @@
     margin: 0;
     padding: 0;
     color: #2c3e50;
-    width: 100vw;
-  }
+    width: 100%;  
+    }
   @media screen and (min-width: 601px){
     body{
       height: 100vh;
