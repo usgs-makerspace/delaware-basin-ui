@@ -6,66 +6,30 @@
           {{ title }}
         </h2>
       </div>
-      <div
-        id="mapbox_component-layers-toggle"
-        class="mapbox_component-topnav"
-      >
-        <a
-          id="map-layers-label"
-          href="JavaScript:Void(0);"
-          class="active"
-        >Map Layers</a>
-        <a
-          href="JavaScript:Void(0);"
-          class="icon"
-          @click="changeToResponsiveElement('mapbox_component-layers-toggle')"
-        ><font-awesome-icon icon="layer-group" />
-        </a>
-      </div>
-      <div
-        id="mapbox_component-streams-toggle"
-        class="mapbox_component-topnav"
-      >
-        <a
-          id="map-streams-label"
-          href="JavaScript:Void(0);"
-          class="active"
-        >Stream Orders</a>
-        <a
-          class="icon"
-          @click="changeToResponsiveElement('mapbox_component-streams-toggle')"
-        ><font-awesome-icon icon="water" />
-        </a>
-      </div>
-      <div
-        id="mapbox_component-providers-toggle"
-        class="mapbox_component-topnav"
-      >
-        <a
-          id="map-providers-label"
-          href="JavaScript:Void(0);"
-          class="active"
-        >Data Providers</a>
-        <a
-          class="icon"
-          @click="changeToResponsiveElement('mapbox_component-providers-toggle')"
-        ><font-awesome-icon icon="hand-holding-heart" />
-        </a>
-      </div>
-      <div
-        id="mapbox_component-project-specific-toggle"
-        class="mapbox_component-topnav"
-      >
-        <a
-          id="map-project-specific-label"
-          href="JavaScript:Void(0);"
-          class="active"
-        >Project Specific</a>
-        <a
-          class="icon"
-          @click="changeToResponsiveElement('mapbox_component-project-specific-toggle')"
-        ><font-awesome-icon icon="microscope" />
-        </a>
+      <div id="mapbox_component-toggle" class="mapbox_component-topnav">
+        <div id="topNavText">
+          <a id="map-layers-label" class="active">Map Options</a>
+        </div>
+        <div id="ToggleOptions">
+          <div id="mapLayers"></div>
+          <div id="streams"></div>
+          <div id="dataProviders"></div>
+          <div id="projects"></div>
+        </div>
+        <div id="iconToggleContainer">
+          <a id="layersIcon" class="icon">
+            <font-awesome-icon icon="layer-group" />
+          </a>
+          <a id="streamsIcon" class="icon">
+            <font-awesome-icon icon="water" />
+          </a>
+          <a id="dataProvidersIcon" class="icon">
+            <font-awesome-icon icon="hand-holding-heart" />
+          </a>
+          <a id="projectsIcon" class="icon">
+            <font-awesome-icon icon="microscope" />
+          </a>
+        </div>
       </div>
     </div>
     <div
@@ -162,16 +126,6 @@
             }
         },
         methods: {
-            // Switch to a mobile menu (add the 'responsive' class name) when user clicks the 'layer-group' icon.
-            // Note: this method is bound to the anchor ('a') element that contains the subject related icons.
-            changeToResponsiveElement: function(targetElement) {
-                let mapboxComponentLayerToggle = document.getElementById(targetElement);
-                if (mapboxComponentLayerToggle.className === "mapbox_component-topnav") {
-                    mapboxComponentLayerToggle.className += " responsive";
-                } else {
-                    mapboxComponentLayerToggle.className = "mapbox_component-topnav";
-                }
-            },
             onMapLoaded(event) {
                 let map = event.map; // This gives us access to the map as an object but only after the map has loaded
 
@@ -223,7 +177,7 @@
                 assembledOffAtStartSets.push(streamsTurnedOffAtStart);
                 assembledOffAtStartSets.push(ProjectSpecificTurnedOffAtStart);
 
-                let elementTargets = ['mapbox_component-layers-toggle', 'mapbox_component-streams-toggle', 'mapbox_component-project-specific-toggle'];
+                let elementTargets = ['mapLayers', 'streams', 'projects'];
                 let countup = 0;
                 assembledIdSets.forEach(function(idSet) {
                     // Go through each layer id that is in the array and make a button element for it
@@ -259,13 +213,59 @@
                                 map.setLayoutProperty(clickedLayer, 'visibility', 'visible');
                             }
                         };
-
                         let layerToggleList = document.getElementById(elementTargets[countup]);
                         layerToggleList.appendChild(link);
                     }
                     countup++;
                 });
+                
+                let layersIcon = document.getElementById("layersIcon");
+                let streamsIcon = document.getElementById("streamsIcon");
+                let dataProvidersIcon = document.getElementById("dataProvidersIcon");
+                let projectsIcon = document.getElementById("projectsIcon");
+                //Toggle which options are shown based on what icon is clicked
+                let toggle = function(clicked, show){
+                  let toggleOptions = document.getElementById("ToggleOptions");
+                  let option = document.getElementById(show);
+                  let icons = document.getElementById("iconToggleContainer").childNodes;
+                  if(toggleOptions.classList.contains("active") && clicked.classList.contains("active")){
+                    toggleOptions.classList.remove("active");
+                    clicked.classList.remove("active");
+                    option.style.display = "none";
+                  }else if(toggleOptions.classList.contains("active")){
+                    //Check toggle options to see if any options are currently showing
+                    for(let i = 0; i < toggleOptions.childNodes.length; i++){
+                      if(toggleOptions.childNodes[i].style.display === "flex"){
+                        toggleOptions.childNodes[i].style.display = "none";
+                      }
+                    }
+                    //Check to see if any icons are active and deactivate them
+                    for(let j = 0; j < icons.length; j++){
+                      if(icons[j].classList.contains("active")){
+                        icons[j].classList.remove("active");
+                      }
+                    }
+                    clicked.classList.add("active");
+                    option.style.display = "flex";
+                  }else{
+                    toggleOptions.classList.add("active");
+                    clicked.classList.add("active");
+                    option.style.display = "flex";
+                  }
+                }
 
+                layersIcon.onclick = function(){
+                  toggle(this, "mapLayers");
+                }
+                streamsIcon.onclick = function(){
+                  toggle(this, "streams");
+                }
+                dataProvidersIcon.onclick = function(){
+                  toggle(this, "dataProviders");
+                }
+                projectsIcon.onclick = function(){
+                  toggle(this, "projects");
+                }
                 // next section controls the HRU hover effect
                 let hoveredHRUId = this.hoveredHRUId;
                 map.on("mousemove", "hru - highlight", function(e) {
@@ -400,7 +400,7 @@ console.log('HRU ', e.features[0])
                 // data provider. Then buttons are added for each of those layers.
                 let url = 'https://delaware-basin-test-website.s3-us-west-2.amazonaws.com/geojson/delaware_site_summary.geojson';
                 // set up a element to contain the filter selections for monitoring locations
-                let providersToggle = document.getElementById('mapbox_component-providers-toggle');
+                let providersToggle = document.getElementById('dataProviders');
 
                 // Create a function to handle the 'response' returned from the 'fetch' command
                 function status(response) {
@@ -529,7 +529,7 @@ console.log('HRU ', e.features[0])
                                             }
                                     };
 
-                                    let layerToggleList = document.getElementById('mapbox_component-providers-toggle');
+                                    let layerToggleList = document.getElementById('dataProviders');
                                     layerToggleList.appendChild(link);
 
                                 }
@@ -552,49 +552,50 @@ console.log('HRU ', e.features[0])
 
 <style scoped lang="scss">
   @import"~mapbox-gl/dist/mapbox-gl.css";
-
-  .header-container {
-    background-color: #fff;
+$color: #fff;
+$blue: #4574a3;
+$border: 1px solid #fff;
+.header-container {
+  background-color: #fff;
+}
+/* Add a background color to the layer toggle bar */
+#mapbox_component-toggle {
+  background-color: $blue;
+  display: flex;
+}
+#topNavText {
+  border-right: $border;
+  width: 100px;
+  a {
+    width: 100%;
+    font-size: 0.9em;
+    color: $color;
+    background: #00264c;
+    vertical-align: center;
   }
-  /* Add a background color to the layer toggle bar */
-  .mapbox_component-topnav {
-    background-color: #4574a3;
-    overflow: hidden;
+}
+
+#mapLayers,
+#streams,
+#dataProviders,
+#projects{
+  display: none;
+}
+#iconToggleContainer {
+  width: 170px;
+  display: flex;
+  a {
+    flex: 1;
+    background: #00264c;
+    margin: 0;
+    color: $color;
+    border-left: $border;
+    cursor: pointer;
   }
-
-  #map-layers-label::after {
-    content: "|";
-    padding-left: 10px;
-    float: right;
-    color: #fff;
-  }
-
-  #map-streams-label::after {
-    content: "|";
-    padding-left: 10px;
-    float: right;
-    color: #fff;
-  }
-
-  #map-providers-label::after {
-    content: "|";
-    padding-left: 10px;
-    float: right;
-    color: #fff;
-  }
-
-  #map-project-specific-label::after {
-    content: "|";
-    padding-left: 10px;
-    float: right;
-    color: #fff;
-  }
-
-
-  .usa-prose {
-    border-bottom: 1px solid rgb(100,100,100);
-  }
-
+  a.active{
+      background: #00bf26
+    }
+}
   .info-container p {
     font-family: 'Source Sans Pro', sans-serif;
     margin: 0;
@@ -631,89 +632,54 @@ console.log('HRU ', e.features[0])
   }
 
 </style>
-<style>
-  /* Style the links inside the layer toggle bar */
-  .mapbox_component-topnav a {
-    float: left;
-    display: block;
-    color: #d3d9f2;
-    text-align: center;
-    padding: 10px 16px;
-    margin: 2px 0;
-    background-color: #00264c;
-    font-size: 17px;
-    text-decoration: line-through;
+<style lang="scss">
+$color: #fff;
+$blue: #4574a3;
+$border: 1px solid #fff;
+#mapbox_component-toggle a {
+  text-decoration: none;
+  padding: 5px 10px;
+  display: block;
+  background: #00264c;
+  outline: none;
+  text-align: center;
+}
+#ToggleOptions {
+  display: flex;
+  flex: 8;
+  flex-wrap: wrap;
+  height: 30px;
+  div {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 90000;
+      a{
+        width: 100%;
+        font-size: 0.8em;
+        color: $color;
+        text-decoration: line-through;
+        &:hover {
+          text-decoration: none;
+          background: $blue;
+        }
+      }
   }
-
-  /* Change the color of links in layer toggle on hover */
-  .mapbox_component-topnav a.active:hover {
-    background-color: #ddd;
-    color: black;
-  }
-
-  /* Override the hover effect for so the 'Map Layers' label does not appear click-able. */
-  #map-layers-label:hover {
-    background-color: #4574a3;
-    color: white;
-  }
-
-  /* Override the hover effect for so the 'Stream Orders' label does not appear click-able. */
-  #map-streams-label:hover {
-    background-color: #4574a3;
-    color: white;
-  }
-
-  /* Override the hover effect for so the 'Stream Orders' label does not appear click-able. */
-  #map-providers-label:hover {
-    background-color: #4574a3;
-    color: white;
-  }
-
-  /* Add an active class to highlight the current toggle */
-  .mapbox_component-topnav a.active {
-    background-color: #4574a3;
-    color: white;
+  .active {
     text-decoration: none;
+    background: $blue;
   }
+}
 
-  /* Hide the layer-group icon that should open and close the toggle menu on small screens */
-  .mapbox_component-topnav .icon {
-    display: none;
-  }
-
-  /* When the screen is less than 600 pixels wide, hide all links, except for the title ("map layers").
-  Show the layer-group that should open and close the layer toggle bar */
-  @media screen and (max-width: 900px) {
-    .usa-prose .title-text {
-      font-size: .8em;
-      margin-left: 1rem;
-    }
-
-    .mapbox_component-topnav a:not(:first-child) {
-      display: none;
-    }
-
-    .mapbox_component-topnav a.icon {
-      float: right;
-      display: block;
-    }
-
-    /* The "responsive" class is added to the topnav with JavaScript when the user clicks on the any of the toggle icons.
-    This class makes the to layer toggle menu look good on small screens (display the links vertically instead of horizontally) */
-    .mapbox_component-topnav.responsive {
-      position: relative;
-    }
-
-    .mapbox_component-topnav.responsive a.icon {
-      position: absolute;
-      right: 0;
-      top: 0;
-    }
-
-    .mapbox_component-topnav.responsive a {
-      float: none;
-      display: block;
-      text-align: left;
+@media screen and (min-width:960px) {
+  #ToggleOptions {
+    div{
+      a{
+        flex-grow: 1;
+        width: auto;
+      }
     }
   }
+}
 </style>
