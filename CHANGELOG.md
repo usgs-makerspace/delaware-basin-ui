@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Map Options Toggle functionality
 - Legend toggle functionality
 - divided buttons on bars
 - added hill shade
