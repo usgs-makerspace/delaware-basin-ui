@@ -53,6 +53,7 @@
         :pitch-with-rotate="false"
         :drag-rotate="false"
         :touch-zoom-rotate="false"
+        :max-bounds="maxBounds"
         @load="onMapLoaded"
       >
         <MglAttributionControl
@@ -122,13 +123,14 @@
                 hoveredHRUId: null,
                 hoveredNHDFlowLineId: null,
                 hoveredPRMSId: null,
-                legendTitle: 'Legend'
+                legendTitle: 'Legend',
+                maxBounds: [[-179.56055624999985, 9.838930211369288], [-11.865243750001127, 57.20768307316615]], // The coordinates needed to make a bounding box for the continental United States.
             }
         },
         methods: {
             onMapLoaded(event) {
                 let map = event.map; // This gives us access to the map as an object but only after the map has loaded
-
+                console.log(map.getBounds().toString());
                 // Get the element that will hold text information about a selected map element, such as a monitoring location.
                 // We will use this later for several different map elements.
                 let infoForSelectedItem = document.getElementById('infoForSelectedItem');
