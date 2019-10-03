@@ -53,6 +53,7 @@
         :pitch-with-rotate="false"
         :drag-rotate="false"
         :touch-zoom-rotate="false"
+        :max-bounds="maxBounds"
         @load="onMapLoaded"
       >
         <MglAttributionControl
@@ -122,7 +123,8 @@
                 hoveredHRUId: null,
                 hoveredNHDFlowLineId: null,
                 hoveredPRMSId: null,
-                legendTitle: 'Legend'
+                legendTitle: 'Legend',
+                maxBounds: [[-179.56055624999985, 9.838930211369288], [-11.865243750001127, 57.20768307316615]], // The coordinates needed to make a bounding box for the continental United States.
             }
         },
         methods: {
