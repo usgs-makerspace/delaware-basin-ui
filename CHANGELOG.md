@@ -2,6 +2,7 @@
 All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
+- Added bounding box to prevent scrolling too far off screen
 - Map Options Toggle functionality
 - Legend toggle functionality
 - divided buttons on bars
