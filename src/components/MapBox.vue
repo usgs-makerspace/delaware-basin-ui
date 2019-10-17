@@ -277,7 +277,7 @@
                             map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: false});
                         }
                         hoveredHRUId = e.features[0].id;
-console.log('HRU ', e.features[0])
+
                         map.setFeatureState({source: 'HRU', sourceLayer: 'hrus', id: hoveredHRUId}, {hover: true});
                     }
                 });
@@ -376,7 +376,7 @@ console.log('HRU ', e.features[0])
 
                 // Next section creates an information banner for PRMS rivers
                 map.on('click', 'PRMS rivers', function (e) {
-                    infoForSelectedItem.textContent = 'PMS River || ';
+                    infoForSelectedItem.textContent = 'PRMS River || ';
                     let properties = e.features[0].properties;
                     for (let [key, value] of Object.entries(properties)) {
                         if (key !== '' && value !== '') {
@@ -392,7 +392,6 @@ console.log('HRU ', e.features[0])
                 map.on('mouseleave', 'PRMS rivers', function () {
                     map.getCanvas().style.cursor = '';
                 });
-
 
                 // This section starts data provider filtering . . .
                 // We need an object to do the filtering and can't just use the data pulled in with the original
