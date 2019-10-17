@@ -1369,7 +1369,7 @@ export default {
                 'inLegend': true
             },
             {
-                'id': ' PRMS rivers',
+                'id': 'PRMS rivers',
                 'type': 'line',
                 'source': 'delaware_basin_tiles',
                 'source-layer': 'delaware_PRMS_streams',
